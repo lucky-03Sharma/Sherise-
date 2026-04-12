@@ -3,10 +3,13 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const jwtwebtoken = require("jsonwebtoken");
 const dotenv = require("dotenv");
-
+const complaintRoutes = require("./routes/complaintRoutes");
+const authRoutes = require("./routes/authRoutes");
 dotenv.config();
 const app = express();
 
+app.use("/api/complaints", complaintRoutes);
+app.use(".api/authUser", authRoutes);
 app.get("/" , (req , res)=>{
     res.send("SheRise API is running");
 })
