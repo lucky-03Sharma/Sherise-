@@ -7,9 +7,9 @@ const complaintRoutes = require("./routes/complaintRoutes");
 const authRoutes = require("./routes/authRoutes");
 dotenv.config();
 const app = express();
-
+app.use(express.json());
 app.use("/api/complaints", complaintRoutes);
-app.use(".api/authUser", authRoutes);
+app.use("/api/auth", authRoutes);
 app.get("/" , (req , res)=>{
     res.send("SheRise API is running");
 })

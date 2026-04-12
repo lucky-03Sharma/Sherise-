@@ -4,5 +4,5 @@ const { createComplaint } = require("../controllers/complaintController");
 const protect = require("../middlewares/authMiddleware");
 const { create } = require("../models/User");
 
-router.post("create", protect , createComplaint);
+router.post("/create", protect , createComplaint);
 module.exports = router;
