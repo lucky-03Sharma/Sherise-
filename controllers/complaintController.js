@@ -51,3 +51,22 @@ exports.updateComplaint = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+exports.deleteComplaint = async (req , res) =>{
+    try{
+        const complaint = await complaint.findById(req.params.id);
+        if(!complaint){
+            return res.status(404).json({message: "Complaint not found"});
+        }
+         if (complaint.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    await complaint.deleteOne();
+
+    res.json({ message: "Complaint deleted successfully" });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
