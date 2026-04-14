@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const consultationSchema = new mongoose.Schema(
     {
         userId: {
-            type: mongoose.Schema.types.objectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true ,
         },
