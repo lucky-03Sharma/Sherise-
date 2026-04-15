@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const threapySessionSchema = new mongoose.Schema(
+const TherapySessionSchema = new mongoose.Schema(
     {
       userId: {
         type: mongoose.Schema.Types.ObjectId ,
@@ -40,4 +40,4 @@ const threapySessionSchema = new mongoose.Schema(
     {timestamps: true}
 );
 
-module.exports = mongoose.model("ThreapySession" , therapySessionSchema);
+module.exports = mongoose.model("TherapySession" , TherapySessionSchema);
