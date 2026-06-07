@@ -82,7 +82,7 @@ exports.deleteComplaint = async (req , res) =>{
 
 exports.getMyComplaints = async (req, res) => {
   try {
-    const complaints = await Complaint.find({ userId: req.user._id });
+    const complaints = await Complaint.find({ userId: req.user.id });
 
     res.status(200).json(complaints);
   } catch (error) {
