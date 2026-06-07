@@ -29,6 +29,7 @@ export default function Complaints() {
       fetchComplaints();
     } catch (err) {
       console.log("Submit error:", err);
+      alert("Failed to submit. Please log in and try again.");
     }
   };
 
@@ -49,11 +50,18 @@ export default function Complaints() {
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
 
-        <input
-          placeholder="Type"
+        <select
           value={form.type}
           onChange={(e) => setForm({ ...form, type: e.target.value })}
-        />
+        >
+          <option value="">Select type</option>
+          <option value="Sexual harassment">Sexual harassment</option>
+          <option value="Domestic Violence">Domestic Violence</option>
+          <option value="Rape">Rape</option>
+          <option value="Threats">Threats</option>
+          <option value="Mental Torture">Mental Torture</option>
+          <option value="Other">Other</option>
+        </select>
 
         <input
           placeholder="Description"

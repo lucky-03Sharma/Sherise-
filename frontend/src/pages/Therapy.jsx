@@ -5,9 +5,9 @@ import Navbar from "../components/Navbar";
 export default function Therapy() {
   const [therapists, setTherapists] = useState([]);
   const [form, setForm] = useState({
-    name: "",
-    issue: "",
-    message: "",
+    issueType: "",
+    description: "",
+    sessionDate: "",
   });
 
   // 🔹 Fetch therapists (optional backend)
@@ -34,16 +34,17 @@ export default function Therapy() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await API.post("/therapy/request", form);
+      await API.post("/therapy/create", form);
       alert("Therapy request submitted ✅");
 
       setForm({
-        name: "",
-        issue: "",
-        message: "",
+        issueType: "",
+        description: "",
+        sessionDate: "",
       });
     } catch (err) {
       console.log("Submit error:", err);
+      alert("Failed to submit. Please log in and try again.");
     }
   };
 
@@ -54,29 +55,33 @@ export default function Therapy() {
 
       {/* 🔹 Request Form */}
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Your Name"
-          value={form.name}
+        <select
+          value={form.issueType}
           onChange={(e) =>
-            setForm({ ...form, name: e.target.value })
+            setForm({ ...form, issueType: e.target.value })
           }
-        />
-
-        <input
-          type="text"
-          placeholder="Issue (Anxiety, Abuse, Trauma...)"
-          value={form.issue}
-          onChange={(e) =>
-            setForm({ ...form, issue: e.target.value })
-          }
-        />
+        >
+          <option value="">Select issue type</option>
+          <option value="anxiety">Anxiety</option>
+          <option value="depression">Depression</option>
+          <option value="trauma">Trauma</option>
+          <option value="stress">Stress</option>
+          <option value="other">Other</option>
+        </select>
 
         <textarea
           placeholder="Describe your situation"
-          value={form.message}
+          value={form.description}
           onChange={(e) =>
-            setForm({ ...form, message: e.target.value })
+            setForm({ ...form, description: e.target.value })
+          }
+        />
+
+        <input
+          type="date"
+          value={form.sessionDate}
+          onChange={(e) =>
+            setForm({ ...form, sessionDate: e.target.value })
           }
         />
 

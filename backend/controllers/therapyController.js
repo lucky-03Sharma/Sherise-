@@ -17,8 +17,17 @@ exports.createSession = async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ error: error.message });
-
+        res.status(500).json({ error: err.message });
     }
+};
 
+exports.getTherapists = async (req, res) => {
+    try {
+        res.json([
+            { name: "Dr. Priya Sharma", specialization: "Anxiety & Stress" },
+            { name: "Dr. Neha Verma", specialization: "Trauma Recovery" },
+        ]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };

@@ -1,14 +1,19 @@
-import {useState} from "react";
+import { useState } from "react";
 import API from "../services/api";
-import {useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function register(){
-    const [from , setForm] = useState({name: "", password:""});
+export default function Register(){
+    const [form , setForm] = useState({name: "", email: "", password:"" , });
     const navigate = useNavigate();
 
     const handleRegister = async () => {
-        await API.post("/auth/register" , form);
-        navigate("/");
+        try {
+            await API.post("/auth/register", form);
+            navigate("/");
+        } catch (err) {
+            console.log("Register error:", err);
+            alert("Registration failed. Email may already be in use.");
+        }
     };
 
     return (
@@ -18,6 +23,7 @@ export default function register(){
       <input placeholder="Email" onChange={(e)=>setForm({...form,email:e.target.value})}/>
       <input type="password" placeholder="Password" onChange={(e)=>setForm({...form,password:e.target.value})}/>
       <button onClick={handleRegister}>Register</button>
+      <p>Already have an account? <Link to="/">Login here</Link></p>
     </div>
   );
 }

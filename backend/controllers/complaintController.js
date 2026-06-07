@@ -20,6 +20,15 @@ exports.createComplaint = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+exports.getAllComplaints = async (req, res) => {
+    try {
+        const complaints = await Complaint.find().sort({ createdAt: -1 });
+        res.json({ complaints });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 exports.getComplaintsById = async (req, res) => {
     try {
         const complaints = await Complaint.findById(req.params.id);
@@ -54,7 +63,7 @@ exports.updateComplaint = async (req, res) => {
 
 exports.deleteComplaint = async (req , res) =>{
     try{
-        const complaint = await complaint.findById(req.params.id);
+        const complaint = await Complaint.findById(req.params.id);
         if(!complaint){
             return res.status(404).json({message: "Complaint not found"});
         }
@@ -66,6 +75,16 @@ exports.deleteComplaint = async (req , res) =>{
 
     res.json({ message: "Complaint deleted successfully" });
 
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getMyComplaints = async (req, res) => {
+  try {
+    const complaints = await Complaint.find({ userId: req.user._id });
+
+    res.status(200).json(complaints);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

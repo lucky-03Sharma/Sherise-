@@ -1,24 +1,29 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import { createConsultation } from "../services/consultationServices";
 
 export default function Consultation() {
   const [form, setForm] = useState({
-    name: "",
     issue: "",
-    message: "",
+    description: "",
+    category: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Consultation Request:", form);
-    alert("Your request has been submitted!");
-    
-    // reset form
-    setForm({
-      name: "",
-      issue: "",
-      message: "",
-    });
+    try {
+      await createConsultation(form);
+      alert("Your request has been submitted!");
+
+      setForm({
+        issue: "",
+        description: "",
+        category: "",
+      });
+    } catch (err) {
+      console.log("Submit error:", err);
+      alert("Failed to submit. Please log in and try again.");
+    }
   };
 
   return (
@@ -29,27 +34,31 @@ export default function Consultation() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Your Name"
-          value={form.name}
-          onChange={(e) =>
-            setForm({ ...form, name: e.target.value })
-          }
-        />
-
-        <input
-          type="text"
-          placeholder="Issue Type (Legal / Mental / Domestic)"
+          placeholder="Issue (e.g. workplace harassment)"
           value={form.issue}
           onChange={(e) =>
             setForm({ ...form, issue: e.target.value })
           }
         />
 
+        <select
+          value={form.category}
+          onChange={(e) =>
+            setForm({ ...form, category: e.target.value })
+          }
+        >
+          <option value="">Select category</option>
+          <option value="legal">Legal</option>
+          <option value="mental">Mental</option>
+          <option value="domestic">Domestic</option>
+          <option value="harassment">Harassment</option>
+        </select>
+
         <textarea
           placeholder="Describe your problem"
-          value={form.message}
+          value={form.description}
           onChange={(e) =>
-            setForm({ ...form, message: e.target.value })
+            setForm({ ...form, description: e.target.value })
           }
         />
 

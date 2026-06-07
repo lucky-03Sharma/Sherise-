@@ -20,3 +20,12 @@ exports.createConsultation = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getMyConsultations = async (req, res) => {
+  try {
+    const consultations = await Consultation.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    res.json({ consultations });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

@@ -1,10 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const { createComplaint , getComplaintsById , updateComplaint , deleteComplaint } = require("../controllers/complaintController");
+const {
+  createComplaint,
+  getAllComplaints,
+  getComplaintsById,
+  getMyComplaints,
+  updateComplaint,
+  deleteComplaint,
+} = require("../controllers/complaintController");
 const protect = require("../middlewares/authMiddleware");
-const { create } = require("../models/User");
+
+router.get("/", getAllComplaints);
+router.post("/create", protect, createComplaint);
+router.get("/my", protect, getMyComplaints);
 router.get("/:id", getComplaintsById);
-router.put("/:id", updateComplaint);
-router.delete("/:id",deleteComplaint);
-router.post("/create", protect , createComplaint);
+router.put("/:id", protect, updateComplaint);
+router.delete("/:id", protect, deleteComplaint);
 module.exports = router;

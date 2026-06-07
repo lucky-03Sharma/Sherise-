@@ -26,6 +26,11 @@ const complaintSchema = new mongoose.Schema(
       required: true,
     },
 
+    description: {
+      type: String,
+      required: true,
+    },
+
     location: {
       type: String,
     },
