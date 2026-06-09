@@ -1,16 +1,13 @@
 const express = require("express");
 const router = express.Router();
-
 const protect = require("../middlewares/authMiddleware");
-const consultationController = require("../controllers/consultationController");
-console.log(consultationController);
 
-router.post("/create", protect, consultationController.createConsultation);
+const {
+    createConsultation, 
+    getMyConsultations, 
+    deleteConsultation } = require("../controllers/consultationController");
 
-router.get("/my", protect, consultationController.getMyConsultations);
-
-router.delete("/delete/:id", (req, res) => {
-  res.json({ message: "Delete route working" });
-});
-
+router.post("/create", protect, createConsultation);
+router.get("/my", protect, getMyConsultations);
+router.delete("/delete/:id", protect, deleteConsultation);
 module.exports = router;
