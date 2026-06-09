@@ -29,3 +29,20 @@ exports.getMyConsultations = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.deleteConsultation = async (req, res) => {
+  try {
+    const consultation = await Consultation.findById(req.params.id);
+    if (!consultation) {
+      return res.status(404).json({ message: "Consultation not found" });
+    }
+    if (consultation.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+    await consultation.deleteOne();
+    res.json({ message: "Consultation deleted" });
+  }
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
