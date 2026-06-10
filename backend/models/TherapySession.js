@@ -1,43 +1,53 @@
 const mongoose = require("mongoose");
 
 const TherapySessionSchema = new mongoose.Schema(
-    {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId ,
-        ref: "User",
-        required: true ,
-      },
-
-      psychologistName : {
-        type: String,
-      },
-
-      issueType: {
-        type: String,
-        enum: ["anxiety" , "depression" , "trauma" , "stress" , "other"],
-        required: true,
-      },
-
-      description: {
-        type: String,
-        required: true,
-      },
-
-      sessionDate: {
-        type: Date,
-      },
-
-      status: {
-        type: String,
-        enum: ["requested" , "scheduled" , "completed" , "cancelled"],
-        default: "requested" ,
-      },
-
-      notes: {
-        type: String,
-      }
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    {timestamps: true}
+
+    psychologistName: {
+      type: String,
+    },
+
+    issueType: {
+      type: String,
+      enum: ["anxiety", "depression", "trauma", "stress", "other"],
+      required: true,
+    },
+
+    description: {
+      type: String,
+      required: true,
+    },
+
+    sessionDate: {
+      type: Date,
+    },
+
+    status: {
+      type: String,
+      enum: ["requested", "scheduled", "completed", "cancelled"],
+      default: "requested",
+    },
+
+    notes: {
+      type: String,
+    },
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+    },
+
+    review: {
+      type: String,
+    },
+  },
+
+  { timestamps: true }
 );
 
-module.exports = mongoose.model("TherapySession" , TherapySessionSchema);
+module.exports = mongoose.model("TherapySession", TherapySessionSchema);
