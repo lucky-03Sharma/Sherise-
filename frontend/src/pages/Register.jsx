@@ -9,6 +9,7 @@ export default function Register(){
     const handleRegister = async () => {
         try {
             await API.post("/auth/register", form);
+            alert(res.data.message || "Registration successful!");
             navigate("/");
         } catch (err) {
             console.log("Register error:", err);

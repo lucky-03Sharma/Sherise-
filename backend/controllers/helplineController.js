@@ -21,7 +21,6 @@ exports.createHelpline = async (req, res) => {
   }
 };
 
-// Get all helplines
 exports.getHelplines = async (req, res) => {
   try {
     const helplines = await Helpline.find();
