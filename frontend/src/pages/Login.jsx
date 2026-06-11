@@ -24,8 +24,8 @@ export default function Login() {
   return (
     <div>
       <h2>Login</h2>
-      <input placeholder="Email" onChange={(e)=>setForm({...form,email:e.target.value})}/>
-      <input placeholder="Password" type="password" onChange={(e)=>setForm({...form,password:e.target.value})}/>
+      <input placeholder="Email" value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})}/>
+      <input placeholder="Password" type="password" value={form.password} onChange={(e)=>setForm({...form,password:e.target.value})}/>
       <button onClick={handleLogin}>Login</button>
     </div>
   );
