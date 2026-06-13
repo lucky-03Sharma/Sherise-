@@ -10,4 +10,21 @@
         #d63384
     );
 
+    .register-card{
+        border:none;
+        border-radius: 20px;
+        padding:20px;
+    };
+
+    .register-card h2{
+        font-weight: bold;
+        color:#6f42c1;
+        border: none;
+        .btn-primary:hover{
+            background:#5a32a3;
+            transform: scale(1.02);
+            transition: .3s;
+        }
+    };
+
 }
