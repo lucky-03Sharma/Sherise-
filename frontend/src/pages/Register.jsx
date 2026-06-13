@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../services/api";
+import "../css/Register.css";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Register(){
@@ -10,7 +11,7 @@ export default function Register(){
         try {
             await API.post("/auth/register", form);
             alert(res.data.message || "Registration successful!");
-            navigate("/");
+            navigate("/login");
         } catch (err) {
             console.log("Register error:", err);
             alert("Registration failed. Email may already be in use.");
@@ -18,13 +19,35 @@ export default function Register(){
     };
 
     return (
-    <div>
-      <h2>Register</h2>
-      <input placeholder="Name" onChange={(e)=>setForm({...form,name:e.target.value})}/>
-      <input placeholder="Email" onChange={(e)=>setForm({...form,email:e.target.value})}/>
-      <input type="password" placeholder="Password" onChange={(e)=>setForm({...form,password:e.target.value})}/>
-      <button onClick={handleRegister}>Register</button>
-      <p>Already have an account? <Link to="/">Login here</Link></p>
+    <div className="register-page">
+
+<div className="container">
+
+<div className="row justify-content-center">
+
+<div className="col-md-5">
+
+<div className="card shadow-lg register-card">
+
+<div className="card-body">
+      <h2 className="text-center mb-4">Register</h2>
+      <input className="form-control mb-3" placeholder="Name" value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})}/>
+      <input className="form-control mb-3" placeholder="Email"  value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})}/>
+      <input className="form-control mb-3" type="password" placeholder="Password" value={form.password} onChange={(e)=>setForm({...form,password:e.target.value})}/>
+      <button className="btn btn-primary w-100" onClick={handleRegister}>Register</button>
+      <p>Already have an account? <Link to="/login">Login here</Link></p>
+
     </div>
-  );
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+);
 }

@@ -6,50 +6,63 @@ export default function Landing() {
     <div className="landing">
 
       {/* Navbar */}
+
       <nav className="navbar">
-        <h2 className="logo"> SheRise</h2>
+
+        <h2 className="logo">SheRise</h2>
 
         <div className="nav-links">
-          <a href="#features">Features</a>
-          <a href="#about">Why Us ? </a>
+          <a href="#services">Services</a>
+          <a href="#why">Why Us</a>
 
           <Link to="/login">
-            <button className="login-btn">Login</button>
+            <button className="nav-btn login">Login</button>
           </Link>
 
           <Link to="/register">
-            <button className="register-btn">Register</button>
+            <button className="nav-btn register">Register</button>
           </Link>
         </div>
+
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero */}
 
       <section className="hero">
 
-        <h1>Empowering Women Through Technology</h1>
+        <div className="hero-text">
 
-        <p>
-          A secure platform for complaint registration,
-          legal consultation, therapy support, and
-          emergency helplines.
-        </p>
+          <h1>Your Voice. Your Strength. Your Safety.</h1>
 
-        <div className="hero-buttons">
-          <Link to="/register">
-            <button>Get Started</button>
-          </Link>
+          <p>
+            SheRise is a secure platform that empowers women
+            through legal guidance, complaint registration,
+            therapy support and emergency assistance.
+          </p>
 
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
+          <div className="hero-buttons">
+
+            <Link to="/register">
+              <button className="primary-btn">
+                Get Started
+              </button>
+            </Link>
+
+            <Link to="/login">
+              <button className="secondary-btn">
+                Login
+              </button>
+            </Link>
+
+          </div>
+
         </div>
 
       </section>
 
-      {/* Features */}
+      {/* Services */}
 
-      <section className="features" id="features">
+      <section className="services" id="services">
 
         <h2>Our Services</h2>
 
@@ -57,29 +70,37 @@ export default function Landing() {
 
           <div className="card">
             <h3> Complaint Portal</h3>
+
             <p>
-              Register complaints securely and track their status.
+              Report complaints securely and
+              track their progress online.
             </p>
           </div>
 
           <div className="card">
-            <h3> Legal Consultation</h3>
+            <h3>Legal Consultation</h3>
+
             <p>
-              Connect with legal professionals for guidance.
+              Get professional legal guidance
+              whenever you need it.
             </p>
           </div>
 
           <div className="card">
-            <h3> Therapy Support</h3>
+            <h3>Therapy Support</h3>
+
             <p>
-              Book therapy and counseling sessions online.
+              Access counseling and therapy
+              sessions confidentially.
             </p>
           </div>
 
           <div className="card">
-            <h3> Emergency Helplines</h3>
+            <h3>Emergency Helplines</h3>
+
             <p>
-              Access important helpline numbers instantly.
+              Find important emergency
+              contacts instantly.
             </p>
           </div>
 
@@ -87,18 +108,35 @@ export default function Landing() {
 
       </section>
 
-      {/* Why Choose Us */}
+      {/* Why Us */}
 
-      <section className="about" id="about">
+      <section className="why" id="why">
 
         <h2>Why Choose SheRise?</h2>
 
-        <ul>
-          <li>Secure & Private</li>
-          <li>Trusted Legal & Therapy Support</li>
-          <li>Fast Access to Emergency Help</li>
-          <li>Empowering Women Together</li>
-        </ul>
+        <div className="cards">
+
+          <div className="card">
+            <h3>Privacy First</h3>
+            <p>Your information stays protected.</p>
+          </div>
+
+          <div className="card">
+            <h3>Quick Support</h3>
+            <p>Fast access to emergency services.</p>
+          </div>
+
+          <div className="card">
+            <h3>Trusted Experts</h3>
+            <p>Verified legal and therapy support.</p>
+          </div>
+
+          <div className="card">
+            <h3>Empowerment</h3>
+            <p>Helping women build a safer future.</p>
+          </div>
+
+        </div>
 
       </section>
 
@@ -113,18 +151,20 @@ export default function Landing() {
         </p>
 
         <Link to="/register">
-          <button>Register Now</button>
+          <button className="primary-btn">
+            Register Now
+          </button>
         </Link>
 
       </section>
 
       {/* Footer */}
 
-      <footer className="footer">
+      <footer>
 
-        <h3>SheRise</h3>
+        <h2>SheRise</h2>
 
-        <p>Empowering Women Through Technology</p>
+        <p>Your Voice. Your Strength. Your Safety.</p>
 
         <p>© 2026 SheRise. All Rights Reserved.</p>
 
