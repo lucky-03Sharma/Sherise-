@@ -1,36 +1,130 @@
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+}
+
+
 .register-page{
 
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(
-        135deg,
-        #6f42c1,
-        #d63384
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:
+    linear-gradient(
+    135deg,
+    #F1D3E0,
+    #EAB8D1
     );
 
-    .register-card{
-        border:none;
-        border-radius: 20px;
-        padding:20px;
-    };
+}
 
-    .register-card h2{
-        font-weight: bold;
-        color:#6f42c1;
-        border: none;
-        .btn-primary:hover{
-            background:#5a32a3;
-            transform: scale(1.02);
-            transition: .3s;
-        }
-    };
 
-    .form-control{
-        height: 50px;
-        border-radius: 10px;
-        font-weight: bold;
-    }
+.register-card{
+
+    background:white;
+
+    border:none;
+
+    border-radius:25px;
+
+    padding:35px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+}
+
+
+.register-card h2{
+
+    text-align:center;
+
+    color:#A45A8D;
+
+    margin-bottom:25px;
+
+    font-size:35px;
+
+}
+
+
+.form-control{
+
+    height:55px;
+
+    border-radius:10px;
+
+    border:2px solid #EAB8D1;
+
+    transition:.3s;
+
+}
+
+
+.form-control:focus{
+
+    border-color:#A45A8D;
+
+    box-shadow:0 0 10px rgba(164,90,141,.2);
+
+}
+
+
+.btn-primary{
+
+    background:#A45A8D;
+
+    border:none;
+
+    height:52px;
+
+    border-radius:10px;
+
+    transition:.3s;
+
+}
+
+
+.btn-primary:hover{
+
+    background:#C77B9D;
+
+    transform:translateY(-3px);
+
+}
+
+
+.register-card p{
+
+    text-align:center;
+
+    margin-top:20px;
+
+}
+
+
+.register-card a{
+
+    text-decoration:none;
+
+    color:#A45A8D;
+
+    font-weight:bold;
+
+}
+
+
+.register-card a:hover{
+
+    color:#C77B9D;
 
 }
