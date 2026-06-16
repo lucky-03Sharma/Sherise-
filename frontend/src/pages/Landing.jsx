@@ -1,30 +1,49 @@
 import { Link } from "react-router-dom";
 import "../css/Landing.css";
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 export default function Landing() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className="landing">
 
       {/* Navbar */}
 
-      <nav className="navbar">
+      {/* Navbar */}
 
-        <h2 className="logo">SheRise</h2>
+<nav className="navbar">
 
-        <div className="nav-links">
-          <a href="#services">Services</a>
-          <a href="#why">Why Us</a>
+  <h2 className="logo">SheRise</h2>
 
-          <Link to="/login">
-            <button className="nav-btn login">Login</button>
-          </Link>
+  <div
+    className="menu-icon"
+    onClick={() => setIsMenuOpen(!isMenuOpen)}
+  >
+    <FontAwesomeIcon icon={faBars} size="2x" />
+  </div>
 
-          <Link to="/register">
-            <button className="nav-btn register">Register</button>
-          </Link>
-        </div>
+  {isMenuOpen && (
 
-      </nav>
+    <div className="dropdown-menu">
+
+      <Link to="/">Home</Link>
+
+      <a href="#services">Services</a>
+
+      <a href="#why">Why Us</a>
+
+      <Link to="/login">Login</Link>
+
+      <Link to="/register">Register</Link>
+
+    </div>
+
+  )}
+
+</nav>
 
       {/* Hero */}
 
@@ -34,7 +53,7 @@ export default function Landing() {
 
           <h1>Your Voice. Your Strength. Your Safety.</h1>
 
-          <p>
+          <p className="hero-subtitle">
             SheRise is a secure platform that empowers women
             through legal guidance, complaint registration,
             therapy support and emergency assistance.
