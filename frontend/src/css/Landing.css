@@ -1,4 +1,4 @@
-/* GENERAL */
+/* ---------------- GENERAL ---------------- */
 
 *{
     margin:0;
@@ -12,437 +12,288 @@ body{
 }
 
 
-/* NAVBAR */
+/* ---------------- NAVBAR ---------------- */
 
 .navbar{
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     padding:18px 80px;
-
     background:white;
-
     box-shadow:0 2px 10px rgba(0,0,0,.08);
-
     position:sticky;
-
     top:0;
-
     z-index:1000;
-
 }
 
 .logo{
-
     font-size:30px;
-
     font-weight:bold;
-
     color:#A45A8D;
-
 }
 
-/* Hamburger Icon */
+/* Hamburger */
 
 .menu-icon{
-
     cursor:pointer;
-
     color:#A45A8D;
-
     transition:.3s;
-
 }
 
 .menu-icon:hover{
-
     color:#C77B9D;
-
+    transform:scale(1.1);
 }
-
 
 /* Dropdown */
 
 .dropdown-menu{
-
     position:absolute;
-
     top:75px;
-
     right:40px;
-
-    width:220px;
-
+    width:240px;
     background:white;
-
     border-radius:15px;
-
     box-shadow:0 8px 20px rgba(0,0,0,.15);
-
     display:flex;
-
     flex-direction:column;
-
     overflow:hidden;
-
+    z-index:2000;
     animation:fade .3s ease;
-
 }
 
-
 .dropdown-menu a{
-
     text-decoration:none;
-
-    color:#444;
-
-    padding:16px;
-
-    font-size:17px;
-
+    color:#555;
+    padding:16px 20px;
+    font-size:16px;
     transition:.3s;
-
 }
 
 .dropdown-menu a:hover{
-
     background:#F1D3E0;
-
     color:#A45A8D;
-
 }
 
+.logout-btn{
+    background:#A45A8D;
+    color:white;
+    border:none;
+    padding:15px;
+    cursor:pointer;
+    font-size:16px;
+    transition:.3s;
+}
+
+.logout-btn:hover{
+    background:#C77B9D;
+}
 
 @keyframes fade{
-
     from{
-
         opacity:0;
-
         transform:translateY(-10px);
-
     }
-
     to{
-
         opacity:1;
-
         transform:translateY(0);
-
     }
-
 }
 
 
-/* HERO */
+/* ---------------- HERO ---------------- */
 
 .hero{
-
     min-height:90vh;
-
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
-    background:
-    linear-gradient(
-    135deg,
-    #A45A8D,
-    #C77B9D,
-    #D9A6B2
-    );
-
+    background:linear-gradient(135deg,#A45A8D,#C77B9D,#D9A6B2);
     padding:40px;
-
 }
 
-.hero-content{
-
+.hero-text{
     max-width:900px;
-
     text-align:center;
-
     background:rgba(255,255,255,.15);
-
     backdrop-filter:blur(12px);
-
     padding:60px;
-
     border-radius:25px;
-
     box-shadow:0 10px 30px rgba(0,0,0,.15);
-
 }
 
 .hero h1{
-
     color:white;
-
     font-size:70px;
-
     margin-bottom:20px;
-
 }
 
-.hero p{
-
-    color:white;
-
-    font-size:22px;
-
-    line-height:35px;
-
+.hero-subtitle{
+    color:#F9EEF4;
+    opacity:.9;
+    font-size:20px;
+    line-height:32px;
+    max-width:750px;
+    margin:20px auto;
+    font-weight:300;
 }
 
 
-/* HERO BUTTONS */
+/* ---------------- HERO BUTTONS ---------------- */
+.hero-buttons{
+    margin-top:35px;
+    display:flex;
+    justify-content:center;
+    gap:20px;
+}
 
-.hero-btn{
-
-    margin-top:30px;
-
+.primary-btn,
+.secondary-btn{
     padding:15px 35px;
-
     border:none;
-
-    border-radius:10px;
-
+    border-radius:12px;
     cursor:pointer;
-
-    font-size:18px;
-
-    margin-right:15px;
-
+    font-size:17px;
     transition:.3s;
-
 }
 
-.primary{
-
+.primary-btn{
     background:white;
-
     color:#A45A8D;
-
+    font-weight:bold;
 }
 
-.secondary{
-
-    background:transparent;
-
-    border:2px solid white;
-
-    color:white;
-
-}
-
-.hero-btn:hover{
-
+.primary-btn:hover{
     transform:translateY(-4px);
+}
 
+.secondary-btn{
+    background:transparent;
+    border:2px solid white;
+    color:white;
+}
+
+.secondary-btn:hover{
+    background:white;
+    color:#A45A8D;
 }
 
 
-/* SERVICES */
+/* ---------------- SERVICES ---------------- */
 
 .services{
-
     padding:80px;
-
 }
 
 .services h2{
-
     text-align:center;
-
     color:#A45A8D;
-
     margin-bottom:50px;
-
     font-size:40px;
-
 }
 
 .cards{
-
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
     gap:30px;
-
 }
 
 .card{
-
-    width: 100%;
-    min-width: 250px;
+    width:100%;
+    min-width:250px;
     background:white;
     padding:35px;
     border-radius:18px;
     text-align:center;
     box-shadow:0 5px 15px rgba(0,0,0,.1);
     transition:.3s;
-
 }
 
 .card:hover{
-
     transform:translateY(-8px);
-
-}
-.hero-subtitle{
-
-    color:#F9EEF4;          /* soft white */
-
-    opacity:0.9;
-
-    font-size:20px;
-
-    line-height:32px;
-
-    max-width:750px;
-
-    margin:20px auto;
-
-    font-weight:300;
-
 }
 
 .card h3{
-
     color:#A45A8D;
-
     margin-bottom:15px;
-
 }
 
 .card p{
-
     color:#555;
-
 }
 
 
-/* WHY SHERISE */
+/* ---------------- WHY SHERISE ---------------- */
 
 .why{
-
     background:#EAB8D1;
-
     padding:80px;
-
 }
 
 .why h2{
-
     text-align:center;
-
     color:#A45A8D;
-
     margin-bottom:50px;
-
 }
 
 .why-grid{
-
     display:grid;
-
     grid-template-columns:repeat(4,1fr);
-
     gap:25px;
-
 }
 
 .why-card{
-
     background:white;
-
     padding:30px;
-
     border-radius:18px;
-
     text-align:center;
-
 }
 
 .why-card h3{
-
     color:#A45A8D;
-
     margin-bottom:10px;
-
 }
 
 
-/* CTA */
+/* ---------------- CTA ---------------- */
 
 .cta{
-
     padding:80px;
-
     text-align:center;
-
 }
 
 .cta h2{
-
     color:#A45A8D;
-
     font-size:45px;
-
 }
 
 .cta p{
-
     margin-top:20px;
-
     font-size:20px;
-
     color:#555;
-
 }
 
 .cta button{
-
     margin-top:30px;
-
     padding:15px 35px;
-
     border:none;
-
     border-radius:10px;
-
     background:#A45A8D;
-
     color:white;
-
     cursor:pointer;
-
     transition:.3s;
-
 }
 
 .cta button:hover{
-
     background:#C77B9D;
-
 }
 
 
-/* FOOTER */
+/* ---------------- FOOTER ---------------- */
 
 .footer{
-
     background:#A45A8D;
-
     color:white;
-
     text-align:center;
-
     padding:30px;
-
 }

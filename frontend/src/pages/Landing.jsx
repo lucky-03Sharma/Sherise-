@@ -3,47 +3,67 @@ import "../css/Landing.css";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-
+const token = localStorage.getItem("token");
 export default function Landing() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <div className="landing">
+      <nav className="navbar">
+        <h2 className="logo">SheRise</h2>
+        <div
+          className="menu-icon"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <FontAwesomeIcon icon={faBars} size="2x" />
+        </div>
 
-      {/* Navbar */}
+        {isMenuOpen && (
 
-      {/* Navbar */}
+          <div className="dropdown-menu">
 
-<nav className="navbar">
+            {/* Always visible */}
 
-  <h2 className="logo">SheRise</h2>
+            <Link to="/">Home</Link>
 
-  <div
-    className="menu-icon"
-    onClick={() => setIsMenuOpen(!isMenuOpen)}
-  >
-    <FontAwesomeIcon icon={faBars} size="2x" />
-  </div>
+            <a href="#why">Why Us</a>
 
-  {isMenuOpen && (
+            {/* If NOT logged in */}
 
-    <div className="dropdown-menu">
+            {!token && (
+              <>
+                <Link to="/login">Login</Link>
+                <Link to="/register">Register</Link>
+              </>
+            )}
 
-      <Link to="/">Home</Link>
+            {/* If logged in */}
 
-      <a href="#services">Services</a>
+            {token && (
+              <>
+                <Link to="/dashboard">Dashboard</Link>
+                <Link to="/complaints">Complaints</Link>
+                <Link to="/consultation">Consultation</Link>
+                <Link to="/therapy">Therapy</Link>
+                <Link to="/helplines">Helplines</Link>
 
-      <a href="#why">Why Us</a>
+                <button
+                  className="logout-btn"
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    window.location.href = "/";
+                  }}
+                >
+                  Logout
+                </button>
+              </>
+            )}
 
-      <Link to="/login">Login</Link>
+          </div>
 
-      <Link to="/register">Register</Link>
+        )}
 
-    </div>
-
-  )}
-
-</nav>
+      </nav>
 
       {/* Hero */}
 
