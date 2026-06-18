@@ -1,17 +1,26 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 import "../css/Login.css";
 
 export default function Login() {
-  const [form, setForm] = useState({ email: "", password: "", });
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const res = await API.post("/auth/login", form);
+
       localStorage.setItem("token", res.data.token);
+
       navigate("/dashboard");
+
     } catch (err) {
       console.log(err);
       console.log(err.response);
@@ -20,53 +29,68 @@ export default function Login() {
 
       alert("Login failed");
     }
-  }
+  };
 
   return (
-    <div className="login-page">
+    <>
+      <Navbar />
 
-      <div className="container">
+      <div className="login-page">
 
-        <div className="row justify-content-center">
+        <div className="container">
 
-          <div className="col-md-5">
+          <div className="row justify-content-center">
 
-            <div className="card shadow-lg login-card">
+            <div className="col-md-5">
 
-              <div className="card-body">
+              <div className="card shadow-lg login-card">
 
-                <h2 className="text-center mb-4">Login</h2>
+                <div className="card-body">
 
-                <input
-                  className="form-control mb-3"
-                  placeholder="Email"
-                  value={form.email}
-                  onChange={(e) =>
-                    setForm({ ...form, email: e.target.value })
-                  }
-                />
+                  <h2 className="text-center mb-4">
+                    Login
+                  </h2>
 
-                <input
-                  className="form-control mb-3"
-                  type="password"
-                  placeholder="Password"
-                  value={form.password}
-                  onChange={(e) =>
-                    setForm({ ...form, password: e.target.value })
-                  }
-                />
+                  <input
+                    className="form-control mb-3"
+                    placeholder="Email"
+                    value={form.email}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        email: e.target.value,
+                      })
+                    }
+                  />
 
-                <button
-                  className="btn btn-primary w-100"
-                  onClick={handleLogin}
-                >
-                  Login
-                </button>
+                  <input
+                    className="form-control mb-3"
+                    type="password"
+                    placeholder="Password"
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        password: e.target.value,
+                      })
+                    }
+                  />
 
-                <p className="text-center mt-3">
-                  Don't have an account?{" "}
-                  <Link to="/register">Register here</Link>
-                </p>
+                  <button
+                    className="btn btn-primary w-100"
+                    onClick={handleLogin}
+                  >
+                    Login
+                  </button>
+
+                  <p className="text-center mt-3">
+                    Don't have an account?{" "}
+                    <Link to="/register">
+                      Register here
+                    </Link>
+                  </p>
+
+                </div>
 
               </div>
 
@@ -77,7 +101,6 @@ export default function Login() {
         </div>
 
       </div>
-
-    </div>
+    </>
   );
 }
