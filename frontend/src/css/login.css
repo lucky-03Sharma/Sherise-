@@ -1,99 +1,86 @@
+/* Background */
+
 .login-page{
-
     min-height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    background:linear-gradient(
-        135deg,
-        #F1D3E0,
-        #EAB8D1
-    );
-
+    background:#F1D3E0;
+    padding-top:120px;   /* space below navbar */
 }
 
-.navbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px 80px;
-    background:white;
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
-    position:sticky;
-    top:0;
-    z-index:1000;
-}
+
+/* Login Card */
 
 .login-card{
-
     border:none;
-
     border-radius:20px;
-
-    padding:20px;
-
     background:white;
-
+    padding:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
 }
+
+
+/* Heading */
 
 .login-card h2{
-
     color:#A45A8D;
-
     font-weight:bold;
-
 }
 
-.form-control{
 
+/* Inputs */
+
+.login-card .form-control{
     height:50px;
-
+    border:1px solid #E5AFC8;
     border-radius:10px;
-
+    box-shadow:none;
 }
 
-.form-control:focus{
-
+.login-card .form-control:focus{
     border-color:#A45A8D;
-
-    box-shadow:0 0 8px rgba(164,90,141,0.3);
-
+    box-shadow:0 0 0 0.15rem rgba(164,90,141,.2);
 }
 
-.btn-primary{
 
+/* Login Button */
+
+.login-card .btn-primary{
     background:#A45A8D;
-
     border:none;
-
-    transition:0.3s;
-
+    height:48px;
+    border-radius:10px;
+    font-weight:bold;
+    transition:.3s;
 }
 
-.btn-primary:hover{
-
+.login-card .btn-primary:hover{
     background:#C77B9D;
+}
 
-    transform:scale(1.02);
 
+/* Register Link */
+
+.login-card p{
+    color:#555;
+    margin-top:18px;
 }
 
 .login-card a{
-
-    text-decoration:none;
-
     color:#A45A8D;
-
+    text-decoration:none;
     font-weight:bold;
-
 }
 
 .login-card a:hover{
-
     color:#C77B9D;
+}
+
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    .login-page{
+        padding:100px 20px 30px;
+    }
 
 }

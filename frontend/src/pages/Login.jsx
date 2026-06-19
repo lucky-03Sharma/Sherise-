@@ -14,7 +14,14 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+
+    if (!form.email || !form.password) {
+      alert("Please fill all fields");
+      return;
+    }
+
     try {
+
       const res = await API.post("/auth/login", form);
 
       localStorage.setItem("token", res.data.token);
@@ -22,12 +29,12 @@ export default function Login() {
       navigate("/dashboard");
 
     } catch (err) {
-      console.log(err);
-      console.log(err.response);
-      console.log(err.response?.data);
-      console.log(err.message);
 
-      alert("Login failed");
+      console.log(err);
+
+      alert(
+        err.response?.data?.message || "Login failed"
+      );
     }
   };
 
@@ -52,6 +59,7 @@ export default function Login() {
                   </h2>
 
                   <input
+                    type="email"
                     className="form-control mb-3"
                     placeholder="Email"
                     value={form.email}
@@ -64,8 +72,8 @@ export default function Login() {
                   />
 
                   <input
-                    className="form-control mb-3"
                     type="password"
+                    className="form-control mb-3"
                     placeholder="Password"
                     value={form.password}
                     onChange={(e) =>
