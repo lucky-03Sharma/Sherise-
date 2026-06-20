@@ -7,6 +7,7 @@ import Complaints from "./pages/Complaints";
 import Helplines from "./pages/Helplines";
 import Consultation from "./pages/Consultation";
 import Therapy from "./pages/Therapy";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -15,11 +16,31 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/complaints" element={<Complaints />} />
-        <Route path="/helplines" element={<Helplines />} />
-        <Route path="/consultation" element={<Consultation />} />
-        <Route path="/therapy" element={<Therapy />} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/complaints" element={
+          <ProtectedRoute>
+            <Complaints />
+          </ProtectedRoute>
+        } />
+        <Route path="/helplines" element={
+          <ProtectedRoute>
+            <Helplines />
+          </ProtectedRoute>
+        } />
+        <Route path="/consultation" element={
+          <ProtectedRoute>
+            <Consultation />
+          </ProtectedRoute>
+        } />
+        <Route path="/therapy" element={
+          <ProtectedRoute>
+            <Therapy />
+          </ProtectedRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );
