@@ -1,53 +1,159 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../services/api";
 import "../css/Register.css";
+import Navbar from "../components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function Register(){
-    const [form , setForm] = useState({name: "", email: "", password:"" , });
-    const navigate = useNavigate();
+export default function Register() {
 
-    const handleRegister = async () => {
-        try {
-            await API.post("/auth/register", form);
-            alert(res.data.message || "Registration successful!");
-            navigate("/login");
-        } catch (err) {
-            console.log("Register error:", err);
-            alert("Registration failed. Email may already be in use.");
-        }
-    };
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-    return (
-    <div className="register-page">
+  const [message, setMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
-<div className="container">
+  const navigate = useNavigate();
 
-<div className="row justify-content-center">
+  useEffect(() => {
+    if (showPopup) {
+      const timer = setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
 
-<div className="col-md-5">
+      return () => clearTimeout(timer);
+    }
+  }, [showPopup]);
 
-<div className="card shadow-lg register-card">
+  const handleRegister = async () => {
 
-<div className="card-body">
-      <h2 className="text-center mb-4">Register</h2>
-      <input className="form-control mb-3" placeholder="Name" value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})}/>
-      <input className="form-control mb-3" placeholder="Email"  value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})}/>
-      <input className="form-control mb-3" type="password" placeholder="Password" value={form.password} onChange={(e)=>setForm({...form,password:e.target.value})}/>
-      <button className="btn btn-primary w-100" onClick={handleRegister}>Register</button>
-      <p>Already have an account? <Link to="/login">Login here</Link></p>
+    if (!form.name || !form.email || !form.password) {
+      setMessage("Please enter the credentials");
+      setShowPopup(true);
+      return;
+    }
 
-    </div>
+    try {
 
-</div>
+      await API.post("/auth/register", form);
 
-</div>
+      setMessage("Registration successful!");
+      setShowPopup(true);
 
-</div>
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
 
-</div>
+    } catch (err) {
 
-</div>
+      console.log("Register error:", err);
 
-);
+      setMessage(
+        err.response?.data?.message ||
+        "Registration failed. Email may already be in use."
+      );
+
+      setShowPopup(true);
+    }
+  };
+
+  return (
+    <>
+      <Navbar />
+
+      <div className="register-page">
+
+        <div className="container">
+
+          <div className="row justify-content-center">
+
+            <div className="col-md-5">
+
+              <div className="card shadow-lg register-card">
+
+                <div className="card-body">
+
+                  <h2 className="text-center mb-4">
+                    Register
+                  </h2>
+
+                  <input
+                    className="form-control mb-3"
+                    placeholder="Name"
+                    value={form.name}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        name: e.target.value,
+                      })
+                    }
+                  />
+
+                  <input
+                    className="form-control mb-3"
+                    type="email"
+                    placeholder="Email"
+                    value={form.email}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        email: e.target.value,
+                      })
+                    }
+                  />
+
+                  <input
+                    className="form-control mb-3"
+                    type="password"
+                    placeholder="Password"
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        password: e.target.value,
+                      })
+                    }
+                  />
+
+                  <button
+                    className="btn btn-primary w-100"
+                    onClick={handleRegister}
+                  >
+                    Register
+                  </button>
+
+                  {showPopup && (
+                    <div
+                      className={`alert mt-3 ${
+                        message.includes("successful")
+                          ? "alert-success"
+                          : "alert-danger"
+                      }`}
+                    >
+                      {message}
+                    </div>
+                  )}
+
+                  <p className="text-center mt-3">
+                    Already have an account?{" "}
+                    <Link to="/login">
+                      Login here
+                    </Link>
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </>
+  );
 }
