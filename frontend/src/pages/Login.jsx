@@ -1,22 +1,48 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../services/api";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import "../css/Login.css";
 
 export default function Login() {
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const navigate = useNavigate();
+  const [message, setMessage] = useState(
+    location.state?.message || ""
+  );
+
+  const [showPopup, setShowPopup] = useState(
+    !!location.state?.message
+  );
+
+  useEffect(() => {
+
+    if (showPopup) {
+
+      const timer = setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+
+    }
+
+  }, [showPopup]);
 
   const handleLogin = async () => {
 
     if (!form.email || !form.password) {
-      alert("Please fill all fields");
+
+      setMessage("Please fill in all fields.");
+      setShowPopup(true);
+
       return;
     }
 
@@ -32,10 +58,11 @@ export default function Login() {
 
       console.log(err);
 
-      alert(
-        err.response?.data?.message || "Login failed"
-      );
+      setMessage("Please check your credentials and try again.");
+      setShowPopup(true);
+
     }
+
   };
 
   return (
@@ -91,6 +118,12 @@ export default function Login() {
                     Login
                   </button>
 
+                  {showPopup && (
+                    <div className="alert alert-danger mt-3">
+                      {message}
+                    </div>
+                  )}
+
                   <p className="text-center mt-3">
                     Don't have an account?{" "}
                     <Link to="/register">
@@ -109,6 +142,7 @@ export default function Login() {
         </div>
 
       </div>
+
     </>
   );
 }
