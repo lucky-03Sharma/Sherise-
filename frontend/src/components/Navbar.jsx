@@ -1,68 +1,93 @@
-import { useNavigate } from "react-router-dom";
-import "../css/Navbar.css";
 import { useState } from "react";
+
+import { Link, useNavigate } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+
+import "../css/Navbar.css";
 
 export default function Navbar() {
 
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
+const navigate = useNavigate();
 
-  return (
-    <nav className="navbar">
+const token = localStorage.getItem("token");
 
-      <h2 className="logo">SheRise</h2>
+const logout = () => {
 
-      <div
-        className="menu-icon"
-        onClick={() => setOpen(!open)}
-      >
-        <FontAwesomeIcon icon={faBars} size="2x" />
-      </div>
+localStorage.removeItem("token");
 
-      {open && (
-        <div className="dropdown-menu">
+navigate("/");
 
-          <button onClick={() => navigate("/")}>
-            Home
-          </button>
+};
 
-          <button onClick={() => navigate("/dashboard")}>
-            Dashboard
-          </button>
+return (
 
-          <button onClick={() => navigate("/complaints")}>
-            Complaints
-          </button>
+<nav className="navbar">
 
-          <button onClick={() => navigate("/therapy")}>
-            Therapy
-          </button>
+<h2 className="logo">SheRise</h2>
 
-          <button onClick={() => navigate("/consultation")}>
-            Consultation
-          </button>
+<div
 
-          <button onClick={() => navigate("/helplines")}>
-            Helplines
-          </button>
+className="menu-icon"
 
-          <button
-            className="logout-btn"
-            onClick={logout}
-          >
-            Logout
-          </button>
+onClick={() => setIsMenuOpen(!isMenuOpen)}
 
-        </div>
-      )}
+>
 
-    </nav>
-  );
+<FontAwesomeIcon icon={faBars} size="2x" />
+
+</div>
+
+{isMenuOpen && (
+
+<div className="sherise-dropdown">
+
+<Link to="/">Home</Link>
+
+{!token ? (
+
+<>
+
+<Link to="/login">Login</Link>
+
+<Link to="/register">Register</Link>
+
+</>
+
+) : (
+
+<>
+
+<Link to="/dashboard">Dashboard</Link>
+
+<Link to="/complaints">Complaints</Link>
+
+<Link to="/therapy">Therapy</Link>
+
+<Link to="/consultation">Consultation</Link>
+
+<Link to="/helplines">Helplines</Link>
+
+<button className="logout-btn" onClick={logout}>
+
+Logout
+
+</button>
+
+</>
+
+)}
+
+</div>
+
+)}
+
+</nav>
+
+);
+
 }
