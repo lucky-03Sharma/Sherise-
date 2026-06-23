@@ -2,18 +2,31 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-//register user
+const normalizeEmail = (email) => email?.trim().toLowerCase() || "";
+
 exports.registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const name = req.body.name?.trim();
+        const email = normalizeEmail(req.body.email);
+        const password = req.body.password;
+
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: "Name, email, and password are required" });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters" });
+        }
+
         const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.status(400).json({ message: "User already exists" });
+            return res.status(400).json({ message: "Email already in use" });
         }
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const user = await User.create({
+        await User.create({
             name,
             email,
             password: hashedPassword,
@@ -23,21 +36,36 @@ exports.registerUser = async (req, res) => {
             message: "User registered successfully",
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        if (error.code === 11000) {
+            return res.status(400).json({ message: "Email already in use" });
+        }
+        res.status(500).json({ message: error.message || "Registration failed" });
     }
 };
 
 exports.loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const email = normalizeEmail(req.body.email);
+        const password = req.body.password;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        if (!process.env.JWT_SECRET) {
+            return res.status(500).json({ message: "Server configuration error" });
+        }
+
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: "Invalid credentials" });
+            return res.status(400).json({ message: "Invalid email or password" });
         }
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: "Invalid credentials" });
+            return res.status(400).json({ message: "Invalid email or password" });
         }
+
         const token = jwt.sign(
             { id: user._id },
             process.env.JWT_SECRET,
@@ -49,6 +77,6 @@ exports.loginUser = async (req, res) => {
             token,
         });
     } catch (err) {
-        res.status(500).json({ err: err.message });
+        res.status(500).json({ message: err.message || "Login failed" });
     }
 };
