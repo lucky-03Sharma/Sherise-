@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "../css/Landing.css";
 import { useState } from "react";
+import Navbar from "../components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 const token = localStorage.getItem("token");
@@ -9,61 +10,7 @@ export default function Landing() {
 
   return (
     <div className="landing">
-      <nav className="navbar">
-        <h2 className="logo">SheRise</h2>
-        <div
-          className="menu-icon"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          <FontAwesomeIcon icon={faBars} size="2x" />
-        </div>
-
-        {isMenuOpen && (
-
-          <div className="dropdown-menu">
-
-            {/* Always visible */}
-
-            <Link to="/">Home</Link>
-
-            <a href="#why">Why Us</a>
-
-            {/* If NOT logged in */}
-
-            {!token && (
-              <>
-                <Link to="/login">Login</Link>
-                <Link to="/register">Register</Link>
-              </>
-            )}
-
-            {/* If logged in */}
-
-            {token && (
-              <>
-                <Link to="/dashboard">Dashboard</Link>
-                <Link to="/complaints">Complaints</Link>
-                <Link to="/consultation">Consultation</Link>
-                <Link to="/therapy">Therapy</Link>
-                <Link to="/helplines">Helplines</Link>
-
-                <button
-                  className="logout-btn"
-                  onClick={() => {
-                    localStorage.removeItem("token");
-                    window.location.href = "/";
-                  }}
-                >
-                  Logout
-                </button>
-              </>
-            )}
-
-          </div>
-
-        )}
-
-      </nav>
+      <Navbar/>
 
       {/* Hero */}
 

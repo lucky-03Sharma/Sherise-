@@ -81,17 +81,17 @@ export default function Complaints() {
   }, []);
 
   return (
-    <div>
+    <div className="complaints-page">
       <Navbar />
 
       <div className="container mt-4">
-        <h2 className="text-center mb-4">
+        <h2 className="complaints-title">
           Complaints
         </h2>
 
         {/* Complaint Form */}
 
-        <div className="card shadow p-4 mb-5">
+        <div className="complaint-form">
           <input
             className="form-control mb-3"
             placeholder="Name"
@@ -181,7 +181,9 @@ export default function Complaints() {
           {showPopup && (
             <div
               className={`alert mt-3 ${
-                message.toLowerCase().includes("success")
+                message
+                  .toLowerCase()
+                  .includes("success")
                   ? "alert-success"
                   : "alert-danger"
               }`}
@@ -193,7 +195,7 @@ export default function Complaints() {
 
         {/* Complaints List */}
 
-        <h3 className="mb-3">
+        <h3 className="complaints-subtitle">
           All Complaints
         </h3>
 
@@ -205,7 +207,7 @@ export default function Complaints() {
           complaints.map((c, index) => (
             <div
               key={index}
-              className="card shadow-sm mb-3"
+              className="complaint-card"
             >
               <div className="card-body">
                 <h5 className="card-title">

@@ -1,6 +1,131 @@
+/* Background */
+
 .complaints-page{
     min-height:100vh;
     background:#F1D3E0;
     padding-top:120px;
     padding-bottom:40px;
+}
+
+
+/* Headings */
+
+.complaints-title{
+    text-align:center;
+    color:#A45A8D;
+    font-weight:bold;
+    margin-bottom:30px;
+}
+
+.complaints-subtitle{
+    color:#A45A8D;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+
+/* Form Card */
+
+.complaint-form{
+    background:white;
+    border:none;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:40px;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+
+/* Inputs */
+
+.complaint-form .form-control,
+.complaint-form .form-select{
+    height:50px;
+    border:1px solid #E5AFC8;
+    border-radius:10px;
+    box-shadow:none;
+}
+
+.complaint-form textarea.form-control{
+    min-height:120px;
+    resize:none;
+}
+
+.complaint-form .form-control:focus,
+.complaint-form .form-select:focus{
+    border-color:#A45A8D;
+    box-shadow:0 0 0 0.15rem rgba(164,90,141,.2);
+}
+
+
+/* Button */
+
+.complaint-form .btn-primary{
+    background:#A45A8D;
+    border:none;
+    height:48px;
+    border-radius:10px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.complaint-form .btn-primary:hover{
+    background:#C77B9D;
+}
+
+.complaint-form .btn-primary:disabled{
+    background:#caa2bb;
+}
+
+
+/* Alert */
+
+.complaint-form .alert{
+    border-radius:10px;
+    margin-top:15px;
+}
+
+
+/* Complaint Cards */
+
+.complaint-card{
+    background:white;
+    border:none;
+    border-radius:15px;
+    padding:10px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.complaint-card:hover{
+    transform:translateY(-3px);
+}
+
+.complaint-card .card-title{
+    color:#A45A8D;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.complaint-card p{
+    color:#555;
+}
+
+.complaint-card strong{
+    color:#A45A8D;
+}
+
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    .complaints-page{
+        padding:100px 20px 30px;
+    }
+
+    .complaint-form{
+        padding:20px;
+    }
 }
