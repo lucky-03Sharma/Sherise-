@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import getApiErrorMessage from "../utils/getApiErrorMessage";
 import Navbar from "../components/Navbar";
 
 export default function Therapy() {
@@ -10,8 +11,20 @@ export default function Therapy() {
     message: "",
   });
 
-  // 🔹 Fetch therapists (optional backend)
+  const [message , setMessage]= useState("");
+  const[ShowPopup , setShowPopup]= useState(false);
+  const[loading, setLoading]= useState(false);
+  
   useEffect(() => {
+    if(ShowPopup){
+      const timer = setTimeout(()=>{
+        setShowPopup(false);
+      },3000);
+      return ()=> clearTimeout(timer);
+    }
+  }, [ShowPopup]);
+
+  useEffect(()=>{
     const fetchTherapists = async () => {
       try {
         const res = await API.get("/therapy");
@@ -33,9 +46,15 @@ export default function Therapy() {
   // 🔹 Submit therapy request
   const handleSubmit = async (e) => {
     e.preventDefault();
+     if (!form.name.trim() || !form.issue.trim() || !form.message.trim()) {
+    setMessage("Please fill in all the fields.");
+    setShowPopup(true);
+    return;
+  }
+    setLoading(true);
     try {
       await API.post("/therapy/request", form);
-      alert("Therapy request submitted ");
+      setMessage("Therapy request submitted successfully.");
 
       setForm({
         name: "",
@@ -43,18 +62,23 @@ export default function Therapy() {
         message: "",
       });
     } catch (err) {
-      console.log("Submit error:", err);
+      setMessage(getApiErrorMessage(err, "failed to submit"));
+      setPopup(true);
+    }finally{
+      setLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className="container mt-4">
       <Navbar />
-      <h2>Therapy Support</h2>
-
+      <h2 className="text-center mb-4">
+        Therapy Support</h2>
+    <div className="card shadow p-4">
       {/* 🔹 Request Form */}
       <form onSubmit={handleSubmit}>
         <input
+        className="form-control mb-3"
           type="text"
           placeholder="Your Name"
           value={form.name}
@@ -64,6 +88,7 @@ export default function Therapy() {
         />
 
         <input
+        className="form-control mb-3"
           type="text"
           placeholder="Issue (Anxiety, Abuse, Trauma...)"
           value={form.issue}
@@ -73,6 +98,7 @@ export default function Therapy() {
         />
 
         <textarea
+        className="form-control mb-3"
           placeholder="Describe your situation"
           value={form.message}
           onChange={(e) =>
@@ -80,7 +106,25 @@ export default function Therapy() {
           }
         />
 
-        <button type="submit">Request Help</button>
+        <button type="submit"
+        className="btn btn-primary"
+        disabled={loading}>
+          {loading
+                ? "Submitting..."
+                : "Request help"}
+            </button>
+
+          {ShowPopup && (
+              <div
+                className={`alert mt-3 ${
+                  message.includes("successfully")
+                    ? "alert-success"
+                    : "alert-danger"
+                }`}
+              >
+                {message}
+              </div>
+            )}
       </form>
 
       {/* 🔹 Therapist List */}
@@ -103,6 +147,7 @@ export default function Therapy() {
           </div>
         ))
       )}
+      </div>
     </div>
   );
 }

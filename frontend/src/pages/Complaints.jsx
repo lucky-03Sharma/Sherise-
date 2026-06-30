@@ -5,6 +5,10 @@ import Navbar from "../components/Navbar";
 
 export default function Complaints() {
   const [complaints, setComplaints] = useState([]);
+  const [myComplaints, setMyComplaints] = useState([]);
+
+  const [showMyComplaints, setShowMyComplaints] = useState(true);
+  const [showAllComplaints, setShowAllComplaints] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -33,7 +37,16 @@ export default function Complaints() {
       const res = await API.get("/complaints");
       setComplaints(res.data.complaints || []);
     } catch (err) {
-      console.log("Fetch error:", err);
+      console.log(err);
+    }
+  };
+
+  const fetchMyComplaints = async () => {
+    try {
+      const res = await API.get("/complaints/my");
+      setMyComplaints(res.data || []);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -66,9 +79,8 @@ export default function Complaints() {
       });
 
       fetchComplaints();
+      fetchMyComplaints();
     } catch (err) {
-      console.log("Submit error:", err);
-
       setMessage(getApiErrorMessage(err));
       setShowPopup(true);
     } finally {
@@ -76,8 +88,29 @@ export default function Complaints() {
     }
   };
 
+  const deleteComplaint = async (id) => {
+    try {
+      await API.delete(`/complaints/${id}`);
+
+      setMessage("Complaint deleted successfully");
+      setShowPopup(true);
+
+      setMyComplaints((prev) =>
+        prev.filter((complaint) => complaint._id !== id)
+      );
+
+      setComplaints((prev) =>
+        prev.filter((complaint) => complaint._id !== id)
+      );
+    } catch (err) {
+      setMessage(getApiErrorMessage(err));
+      setShowPopup(true);
+    }
+  };
+
   useEffect(() => {
     fetchComplaints();
+    fetchMyComplaints();
   }, []);
 
   return (
@@ -85,11 +118,7 @@ export default function Complaints() {
       <Navbar />
 
       <div className="container mt-4">
-        <h2 className="complaints-title">
-          Complaints
-        </h2>
-
-        {/* Complaint Form */}
+        <h2 className="complaints-title">Complaints</h2>
 
         <div className="complaint-form">
           <input
@@ -114,33 +143,13 @@ export default function Complaints() {
               })
             }
           >
-            <option value="">
-              Select Complaint Type
-            </option>
-
-            <option value="Sexual harassment">
-              Sexual Harassment
-            </option>
-
-            <option value="Domestic Violence">
-              Domestic Violence
-            </option>
-
-            <option value="Rape">
-              Rape
-            </option>
-
-            <option value="Threats">
-              Threats
-            </option>
-
-            <option value="Mental Torture">
-              Mental Torture
-            </option>
-
-            <option value="Other">
-              Other
-            </option>
+            <option value="">Select Complaint Type</option>
+            <option value="Sexual harassment">Sexual Harassment</option>
+            <option value="Domestic Violence">Domestic Violence</option>
+            <option value="Rape">Rape</option>
+            <option value="Threats">Threats</option>
+            <option value="Mental Torture">Mental Torture</option>
+            <option value="Other">Other</option>
           </select>
 
           <textarea
@@ -173,17 +182,13 @@ export default function Complaints() {
             onClick={submitComplaint}
             disabled={loading}
           >
-            {loading
-              ? "Submitting..."
-              : "Submit Complaint"}
+            {loading ? "Submitting..." : "Submit Complaint"}
           </button>
 
           {showPopup && (
             <div
               className={`alert mt-3 ${
-                message
-                  .toLowerCase()
-                  .includes("success")
+                message.toLowerCase().includes("success")
                   ? "alert-success"
                   : "alert-danger"
               }`}
@@ -193,45 +198,124 @@ export default function Complaints() {
           )}
         </div>
 
-        {/* Complaints List */}
+        <hr />
 
-        <h3 className="complaints-subtitle">
-          All Complaints
+        <h3
+          className="complaints-subtitle"
+          style={{ cursor: "pointer" }}
+          onClick={() => setShowMyComplaints(!showMyComplaints)}
+        >
+          {showMyComplaints ? "▼" : "▶"} My Complaints
         </h3>
 
-        {complaints.length === 0 ? (
-          <div className="alert alert-info">
-            No complaints yet.
-          </div>
-        ) : (
-          complaints.map((c, index) => (
-            <div
-              key={index}
-              className="complaint-card"
-            >
-              <div className="card-body">
-                <h5 className="card-title">
-                  {c.type}
-                </h5>
-
-                <p>
-                  <strong>Name:</strong>{" "}
-                  {c.name}
-                </p>
-
-                <p>
-                  <strong>Description:</strong>{" "}
-                  {c.description}
-                </p>
-
-                <p>
-                  <strong>Location:</strong>{" "}
-                  {c.location}
-                </p>
-              </div>
+        {showMyComplaints &&
+          (myComplaints.length === 0 ? (
+            <div className="alert alert-info">
+              You haven't submitted any complaints.
             </div>
-          ))
-        )}
+          ) : (
+            myComplaints.map((c) => (
+              <div key={c._id} className="complaint-card">
+                <div className="complaint-header">
+                  <h5 className="card-title">{c.type}</h5>
+
+                  <span className="complaint-date">
+                    {new Date(c.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <div className="complaint-body">
+                  <p>
+                    <strong>Name:</strong> {c.name}
+                  </p>
+
+                  <p>
+                    <strong>Location:</strong> {c.location}
+                  </p>
+
+                  <p>
+                    <strong>Description</strong>
+                  </p>
+
+                  <div className="description-box">
+                    {c.description}
+                  </div>
+                </div>
+
+                <div className="complaint-footer">
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => deleteComplaint(c._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          ))}
+
+        <hr />
+
+        <h3
+          className="complaints-subtitle"
+          style={{ cursor: "pointer" }}
+          onClick={() => setShowAllComplaints(!showAllComplaints)}
+        >
+          {showAllComplaints ? "▼" : "▶"} All Complaints
+        </h3>
+
+        {showAllComplaints &&
+          (complaints.length === 0 ? (
+            <div className="alert alert-info">
+              No complaints available.
+            </div>
+          ) : (
+            <div className="all-complaints-list">
+              {complaints.map((c) => (
+                <div key={c._id} className="complaint-card">
+                  <div className="complaint-top">
+                    <div>
+                      <h4 className="complaint-type">{c.type}</h4>
+
+                      <span className="complaint-date">
+                        {new Date(c.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <span className="complaint-status">
+                      Active
+                    </span>
+                  </div>
+
+                  <div className="complaint-content">
+                    <div className="complaint-row">
+                      <span className="label">Name</span>
+                      <span>{c.name}</span>
+                    </div>
+
+                    <div className="complaint-row">
+                      <span className="label"> Location</span>
+                      <span>{c.location}</span>
+                    </div>
+
+                    <div className="complaint-description">
+                      <h6>Description</h6>
+                      <p>{c.description}</p>
+                    </div>
+                  </div>
+
+                  <div className="complaint-footer">
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => deleteComplaint(c._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
       </div>
     </div>
   );

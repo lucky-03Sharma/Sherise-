@@ -19,20 +19,44 @@ export default function Helplines() {
   }, []);
 
   return (
-    <div>
+    <div className="container mt-4">
       <Navbar />
-      <h2>Helplines</h2>
+
+      <h2 className="text-center mb-4">
+        Emergency Helplines
+      </h2>
 
       {data.length === 0 ? (
-        <p>No helplines available</p>
+        <div className="alert alert-warning text-center">
+          No helplines available.
+        </div>
       ) : (
-        data.map((h, i) => (
-          <div key={i} style={{ border: "1px solid", padding: "10px", margin: "10px" }}>
-            <h4>{h.name}</h4>
-            <p>{h.phone}</p>
-            <p>{h.category}</p>
-          </div>
-        ))
+        <div className="row">
+          {data.map((h, i) => (
+            <div className="col-md-6 mb-4" key={i}>
+              <div className="card shadow h-100">
+                <div className="card-body">
+                  <h4 className="card-title">{h.name}</h4>
+
+                  <p className="card-text">
+                    <strong>Phone:</strong> {h.phone}
+                  </p>
+
+                  <p className="card-text">
+                    <strong>Category:</strong> {h.category}
+                  </p>
+
+                  <a
+                    href={`tel:${h.phone}`}
+                    className="btn btn-danger"
+                  >
+                    📞 Call Now
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
