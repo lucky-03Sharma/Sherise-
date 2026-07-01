@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronDown,
+  faChevronRight,
+  faClipboardList,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 import API from "../services/api";
 import getApiErrorMessage from "../utils/getApiErrorMessage";
 import Navbar from "../components/Navbar";
 import ComplaintCard from "../components/ComplaintCard";
+import IconCircle from "../components/IconCircle";
+import "../css/pages-common.css";
 import "../css/complaint.css";
 
 export default function Complaints() {
@@ -176,7 +185,11 @@ export default function Complaints() {
           onClick={() => setShowMyComplaints(!showMyComplaints)}
         >
           <span>
-            {showMyComplaints ? "▼" : "▶"} My Complaints
+            <FontAwesomeIcon
+              icon={showMyComplaints ? faChevronDown : faChevronRight}
+              className="complaints-subtitle-icon"
+            />
+            My Complaints
           </span>
           <span className="badge-count">{myComplaints.length}</span>
         </h3>
@@ -184,7 +197,9 @@ export default function Complaints() {
         {showMyComplaints &&
           (myComplaints.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-state-icon">📋</div>
+              <div className="empty-state-icon">
+                <IconCircle icon={faClipboardList} />
+              </div>
               <p>You haven't submitted any complaints yet.</p>
               <p className="empty-hint">Use the form above to register your first complaint.</p>
             </div>
@@ -208,7 +223,11 @@ export default function Complaints() {
           onClick={() => setShowAllComplaints(!showAllComplaints)}
         >
           <span>
-            {showAllComplaints ? "▼" : "▶"} All Complaints
+            <FontAwesomeIcon
+              icon={showAllComplaints ? faChevronDown : faChevronRight}
+              className="complaints-subtitle-icon"
+            />
+            All Complaints
           </span>
           <span className="badge-count">{complaints.length}</span>
         </h3>
@@ -216,7 +235,9 @@ export default function Complaints() {
         {showAllComplaints &&
           (complaints.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-state-icon">🔍</div>
+              <div className="empty-state-icon">
+                <IconCircle icon={faMagnifyingGlass} />
+              </div>
               <p>No complaints have been registered yet.</p>
             </div>
           ) : (

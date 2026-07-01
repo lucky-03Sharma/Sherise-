@@ -236,8 +236,60 @@
 }
 
 .empty-state-icon {
-  font-size: 2.5rem;
   margin-bottom: 12px;
+}
+
+.empty-state-icon .icon-circle {
+  width: 64px;
+  height: 64px;
+  font-size: 1.6rem;
+  margin: 0 auto;
+  background: #f1d3e0;
+  color: #a45a8d;
+}
+
+.icon-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.info-card-avatar.icon-circle {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.info-card-avatar-text {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.btn-with-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.complaints-subtitle-icon {
+  margin-right: 8px;
+  font-size: 0.85rem;
 }
 
 .info-card-footer .btn-book {
@@ -292,11 +344,14 @@
 .booking-close {
   background: none;
   border: none;
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   color: #999;
   cursor: pointer;
   line-height: 1;
-  padding: 0 4px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .booking-close:hover {

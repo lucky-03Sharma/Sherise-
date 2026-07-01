@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarDays,
+  faPhone,
+  faTrashCan,
+  faUserDoctor,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import API from "../services/api";
 import getApiErrorMessage from "../utils/getApiErrorMessage";
 import Navbar from "../components/Navbar";
+import IconCircle from "../components/IconCircle";
 import "../css/pages-common.css";
 
 function getInitials(name) {
@@ -176,7 +185,9 @@ export default function Therapy() {
 
         {therapists.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-state-icon">🧠</div>
+            <div className="empty-state-icon">
+              <IconCircle icon={faUserDoctor} />
+            </div>
             <p>No therapists available at the moment.</p>
           </div>
         ) : (
@@ -184,7 +195,7 @@ export default function Therapy() {
             {therapists.map((t, i) => (
               <div className="info-card" key={i}>
                 <div className="info-card-header">
-                  <span className="info-card-avatar">{getInitials(t.name)}</span>
+                  <span className="info-card-avatar-text">{getInitials(t.name)}</span>
                   <div className="info-card-header-text">
                     <h4>{t.name}</h4>
                     <p>Licensed Therapist</p>
@@ -201,9 +212,10 @@ export default function Therapy() {
 
                 <div className="info-card-footer">
                   <button
-                    className="btn btn-primary btn-book"
+                    className="btn btn-primary btn-book btn-with-icon"
                     onClick={() => openBooking(t)}
                   >
+                    <FontAwesomeIcon icon={faCalendarDays} />
                     Book Session
                   </button>
                 </div>
@@ -219,7 +231,9 @@ export default function Therapy() {
 
         {mySessions.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-state-icon">📅</div>
+            <div className="empty-state-icon">
+              <IconCircle icon={faCalendarDays} />
+            </div>
             <p>No appointments yet. Book a session with a therapist above.</p>
           </div>
         ) : (
@@ -227,7 +241,7 @@ export default function Therapy() {
             {mySessions.map((s) => (
               <div className="info-card" key={s._id}>
                 <div className="info-card-header">
-                  <span className="info-card-avatar">📅</span>
+                  <IconCircle icon={faCalendarDays} className="info-card-avatar" />
                   <div className="info-card-header-text">
                     <h4>{s.psychologistName || "Therapist"}</h4>
                     <p>
@@ -261,9 +275,10 @@ export default function Therapy() {
                 <div className="info-card-footer">
                   {s.status === "requested" && (
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger btn-with-icon"
                       onClick={() => deleteSession(s._id)}
                     >
+                      <FontAwesomeIcon icon={faTrashCan} />
                       Cancel
                     </button>
                   )}
@@ -279,8 +294,8 @@ export default function Therapy() {
           <div className="booking-modal" onClick={(e) => e.stopPropagation()}>
             <div className="booking-modal-header">
               <h3>Book with {selectedTherapist.name}</h3>
-              <button className="booking-close" onClick={closeBooking} type="button">
-                ×
+              <button className="booking-close" onClick={closeBooking} type="button" aria-label="Close">
+                <FontAwesomeIcon icon={faXmark} />
               </button>
             </div>
 
@@ -342,7 +357,8 @@ export default function Therapy() {
                 </div>
               )}
 
-              <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+              <button type="submit" className="btn btn-primary w-100 btn-with-icon" disabled={loading}>
+                <FontAwesomeIcon icon={faCalendarDays} />
                 {loading ? "Booking..." : "Confirm Appointment"}
               </button>
             </form>

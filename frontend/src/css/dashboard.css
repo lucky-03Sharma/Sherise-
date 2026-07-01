@@ -43,16 +43,40 @@
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
-.stat-icon {
-  font-size: 2rem;
-  background: #fff8fc;
+.stat-icon .icon-circle {
   width: 56px;
   height: 56px;
+  font-size: 1.35rem;
+  background: #fff8fc;
+  color: #a45a8d;
   border-radius: 14px;
+}
+
+.quick-link-icon .icon-circle {
+  width: 50px;
+  height: 50px;
+  font-size: 1.2rem;
+  background: #f1d3e0;
+  border-radius: 12px;
+}
+
+.stat-icon,
+.quick-link-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.view-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #a45a8d;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: color 0.2s;
 }
 
 .stat-number {
@@ -106,14 +130,6 @@
 }
 
 .quick-link-icon {
-  font-size: 1.8rem;
-  background: #f1d3e0;
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
 }
 
@@ -176,14 +192,6 @@
   overflow: hidden;
 }
 
-.view-all-link {
-  display: inline-block;
-  color: #a45a8d;
-  font-weight: 600;
-  text-decoration: none;
-  margin-bottom: 20px;
-  transition: color 0.2s;
-}
 
 .view-all-link:hover {
   color: #8b4674;

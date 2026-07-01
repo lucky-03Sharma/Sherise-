@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowRight,
+  faClipboardList,
+  faComments,
+  faFolderOpen,
+  faPhone,
+  faUserDoctor,
+} from "@fortawesome/free-solid-svg-icons";
 import API from "../services/api";
 import Navbar from "../components/Navbar";
+import IconCircle from "../components/IconCircle";
 import "../css/pages-common.css";
 import "../css/dashboard.css";
 
@@ -58,10 +68,30 @@ export default function Dashboard() {
   }, []);
 
   const quickLinks = [
-    { to: "/complaints", icon: "📋", label: "File Complaint", desc: "Report an incident securely" },
-    { to: "/therapy", icon: "🧠", label: "Book Therapy", desc: "Schedule with a therapist" },
-    { to: "/consultation", icon: "💬", label: "Consult Expert", desc: "Get professional guidance" },
-    { to: "/helplines", icon: "📞", label: "Helplines", desc: "24/7 emergency support" },
+    {
+      to: "/complaints",
+      icon: faClipboardList,
+      label: "File Complaint",
+      desc: "Report an incident securely",
+    },
+    {
+      to: "/therapy",
+      icon: faUserDoctor,
+      label: "Book Therapy",
+      desc: "Schedule with a therapist",
+    },
+    {
+      to: "/consultation",
+      icon: faComments,
+      label: "Consult Expert",
+      desc: "Get professional guidance",
+    },
+    {
+      to: "/helplines",
+      icon: faPhone,
+      label: "Helplines",
+      desc: "24/7 emergency support",
+    },
   ];
 
   return (
@@ -78,7 +108,9 @@ export default function Dashboard() {
 
         <div className="stats-grid">
           <div className="stat-card">
-            <span className="stat-icon">📋</span>
+            <span className="stat-icon">
+              <IconCircle icon={faClipboardList} />
+            </span>
             <div className="stat-info">
               <span className="stat-number">{stats.myComplaints}</span>
               <span className="stat-label">My Complaints</span>
@@ -86,7 +118,9 @@ export default function Dashboard() {
           </div>
 
           <div className="stat-card">
-            <span className="stat-icon">🗂️</span>
+            <span className="stat-icon">
+              <IconCircle icon={faFolderOpen} />
+            </span>
             <div className="stat-info">
               <span className="stat-number">{stats.complaints}</span>
               <span className="stat-label">Total Reports</span>
@@ -94,7 +128,9 @@ export default function Dashboard() {
           </div>
 
           <div className="stat-card">
-            <span className="stat-icon">🧠</span>
+            <span className="stat-icon">
+              <IconCircle icon={faUserDoctor} />
+            </span>
             <div className="stat-info">
               <span className="stat-number">{stats.therapySessions}</span>
               <span className="stat-label">Therapy Sessions</span>
@@ -102,7 +138,9 @@ export default function Dashboard() {
           </div>
 
           <div className="stat-card">
-            <span className="stat-icon">💬</span>
+            <span className="stat-icon">
+              <IconCircle icon={faComments} />
+            </span>
             <div className="stat-info">
               <span className="stat-number">{stats.consultations}</span>
               <span className="stat-label">Consultations</span>
@@ -114,7 +152,9 @@ export default function Dashboard() {
         <div className="quick-links-grid">
           {quickLinks.map((link) => (
             <Link to={link.to} className="quick-link-card" key={link.to}>
-              <span className="quick-link-icon">{link.icon}</span>
+              <span className="quick-link-icon">
+                <IconCircle icon={link.icon} />
+              </span>
               <div>
                 <h4>{link.label}</h4>
                 <p>{link.desc}</p>
@@ -140,7 +180,8 @@ export default function Dashboard() {
               ))}
             </div>
             <Link to="/complaints" className="view-all-link">
-              View all complaints →
+              View all complaints
+              <FontAwesomeIcon icon={faArrowRight} />
             </Link>
           </>
         )}

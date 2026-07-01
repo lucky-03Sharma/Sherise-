@@ -128,6 +128,20 @@ body{
     margin-bottom:15px;
 }
 
+.card-icon{
+    margin:0 auto 18px;
+    display:flex;
+    justify-content:center;
+}
+
+.card-icon .icon-circle{
+    background:#F1D3E0;
+    color:#A45A8D;
+    width:58px;
+    height:58px;
+    font-size:1.35rem;
+}
+
 .card p{
     color:#555;
 }
@@ -201,9 +215,6 @@ body{
 
 /* ---------------- FOOTER ---------------- */
 
-.footer{
-    background:#A45A8D;
-    color:white;
-    text-align:center;
-    padding:30px;
+.landing .site-footer{
+    margin-top:0;
 }

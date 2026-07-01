@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhone, faPhoneVolume } from "@fortawesome/free-solid-svg-icons";
 import API from "../services/api";
 import Navbar from "../components/Navbar";
+import IconCircle from "../components/IconCircle";
 import "../css/pages-common.css";
 
 const categoryLabels = {
@@ -39,7 +42,9 @@ export default function Helplines() {
 
         {data.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-state-icon">📞</div>
+            <div className="empty-state-icon">
+              <IconCircle icon={faPhoneVolume} />
+            </div>
             <p>No helplines available at the moment.</p>
           </div>
         ) : (
@@ -47,7 +52,7 @@ export default function Helplines() {
             {data.map((h, i) => (
               <div className="info-card" key={h._id || i}>
                 <div className="info-card-header">
-                  <span className="info-card-avatar">📞</span>
+                  <IconCircle icon={faPhone} className="info-card-avatar" />
                   <div className="info-card-header-text">
                     <h4>{h.name}</h4>
                     <p>{categoryLabels[h.category] || h.category}</p>
@@ -83,7 +88,8 @@ export default function Helplines() {
                 </div>
 
                 <div className="info-card-footer">
-                  <a href={`tel:${h.phone}`} className="btn btn-danger">
+                  <a href={`tel:${h.phone}`} className="btn btn-danger btn-with-icon">
+                    <FontAwesomeIcon icon={faPhone} />
                     Call Now
                   </a>
                 </div>

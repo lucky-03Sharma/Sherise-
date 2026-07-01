@@ -1,0 +1,43 @@
+.sherise-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sherise-logo-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a45a8d, #c77b9d);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  box-shadow: 0 4px 12px rgba(164, 90, 141, 0.35);
+  flex-shrink: 0;
+}
+
+.sherise-logo-text {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #a45a8d;
+  letter-spacing: -0.5px;
+}
+
+.sherise-logo--footer .sherise-logo-mark {
+  width: 48px;
+  height: 48px;
+  font-size: 1.3rem;
+}
+
+.sherise-logo--footer .sherise-logo-text {
+  color: #fff;
+  font-size: 1.9rem;
+}
+
+.sherise-logo--footer {
+  justify-content: center;
+}

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComments, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../components/Navbar";
+import IconCircle from "../components/IconCircle";
 import {
   createConsultation,
   getMyConsultations,
@@ -159,7 +162,9 @@ export default function Consultation() {
 
         {myConsultations.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-state-icon">💬</div>
+            <div className="empty-state-icon">
+              <IconCircle icon={faComments} />
+            </div>
             <p>You haven't requested any consultations yet.</p>
           </div>
         ) : (
@@ -167,7 +172,7 @@ export default function Consultation() {
             {myConsultations.map((c) => (
               <div className="info-card" key={c._id}>
                 <div className="info-card-header">
-                  <span className="info-card-avatar">💬</span>
+                  <IconCircle icon={faComments} className="info-card-avatar" />
                   <div className="info-card-header-text">
                     <h4>{c.issue}</h4>
                     <p>
@@ -199,9 +204,10 @@ export default function Consultation() {
 
                 <div className="info-card-footer">
                   <button
-                    className="btn btn-danger"
+                    className="btn btn-danger btn-with-icon"
                     onClick={() => deleteConsultation(c._id)}
                   >
+                    <FontAwesomeIcon icon={faTrashCan} />
                     Delete
                   </button>
                 </div>

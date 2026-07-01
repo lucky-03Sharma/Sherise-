@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+
 export default function ComplaintCard({ data, showDelete = false, onDelete }) {
   const initials = (data.type || "?")
     .split(" ")
@@ -45,9 +48,10 @@ export default function ComplaintCard({ data, showDelete = false, onDelete }) {
       {showDelete && (
         <div className="complaint-footer">
           <button
-            className="btn btn-danger"
+            className="btn btn-danger btn-with-icon"
             onClick={() => onDelete(data._id)}
           >
+            <FontAwesomeIcon icon={faTrashCan} />
             Delete
           </button>
         </div>
