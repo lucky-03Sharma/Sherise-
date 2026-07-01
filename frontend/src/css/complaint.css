@@ -4,8 +4,18 @@
 
 .complaints-page{
     min-height:100vh;
+    width:100%;
     background:#F1D3E0;
-    padding:120px 0 50px;
+    color-scheme:light;
+    color:#555;
+    box-sizing:border-box;
+    text-align:left;
+}
+
+.complaints-page .page-main{
+    padding:36px 24px 50px;
+    max-width:1200px;
+    margin:0 auto;
 }
 
 /* ==========================================
@@ -17,7 +27,15 @@
     color:#A45A8D;
     font-size:2.3rem;
     font-weight:700;
+    margin-bottom:10px;
+}
+
+.complaints-lead{
+    text-align:center;
+    color:#8B4674;
+    font-size:1.05rem;
     margin-bottom:35px;
+    opacity:.9;
 }
 
 .complaints-subtitle{
@@ -31,10 +49,23 @@
     transition:.3s ease;
     margin:35px 0 25px;
     user-select:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
 }
 
 .complaints-subtitle:hover{
     background:#8B4674;
+}
+
+.badge-count{
+    background:#fff;
+    color:#A45A8D;
+    padding:4px 12px;
+    border-radius:20px;
+    font-size:.85rem;
+    font-weight:700;
 }
 
 /* ==========================================
@@ -125,10 +156,28 @@
     background:#A45A8D;
     color:#fff;
     padding:18px 20px;
-
     display:flex;
     justify-content:space-between;
     align-items:center;
+}
+
+.complaint-top-info{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.complaint-avatar{
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    background:rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1rem;
+    font-weight:700;
+    flex-shrink:0;
 }
 
 .complaint-type,
@@ -240,6 +289,26 @@
     transform:scale(1.05);
 }
 
+.empty-state{
+    background:#fff;
+    border-radius:16px;
+    padding:40px 24px;
+    text-align:center;
+    color:#8B4674;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.empty-state-icon{
+    font-size:2.5rem;
+    margin-bottom:12px;
+}
+
+.empty-hint{
+    font-size:.9rem;
+    opacity:.75;
+    margin-top:8px;
+}
+
 /* ==========================================
    ALERT
 ========================================== */
@@ -273,8 +342,8 @@ hr{
 
 @media(max-width:768px){
 
-    .complaints-page{
-        padding:100px 15px 30px;
+    .complaints-page .page-main{
+        padding:24px 15px 30px;
     }
 
     .complaints-title{

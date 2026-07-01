@@ -19,6 +19,7 @@ const token = localStorage.getItem("token");
 const logout = () => {
 
 localStorage.removeItem("token");
+localStorage.removeItem("name");
 
 navigate("/");
 
@@ -27,24 +28,18 @@ navigate("/");
 return (
 
 <nav className="navbar">
+  <h2 className="logo">SheRise</h2>
 
-<h2 className="logo">SheRise</h2>
+  <div className="navbar-actions">
+    <div
+      className="menu-icon"
+      onClick={() => setIsMenuOpen(!isMenuOpen)}
+    >
+      <FontAwesomeIcon icon={faBars} size="2x" />
+    </div>
 
-<div
-
-className="menu-icon"
-
-onClick={() => setIsMenuOpen(!isMenuOpen)}
-
->
-
-<FontAwesomeIcon icon={faBars} size="2x" />
-
-</div>
-
-{isMenuOpen && (
-
-<div className="sherise-dropdown">
+    {isMenuOpen && (
+      <div className="sherise-dropdown">
 
 <Link to="/">Home</Link>
 
@@ -86,6 +81,7 @@ Logout
 
 )}
 
+  </div>
 </nav>
 
 );

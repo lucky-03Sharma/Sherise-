@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import API from "../services/api";
 import getApiErrorMessage from "../utils/getApiErrorMessage";
 import Navbar from "../components/Navbar";
+import ComplaintCard from "../components/ComplaintCard";
+import "../css/complaint.css";
 
 export default function Complaints() {
   const [complaints, setComplaints] = useState([]);
@@ -24,10 +26,7 @@ export default function Complaints() {
 
   useEffect(() => {
     if (showPopup) {
-      const timer = setTimeout(() => {
-        setShowPopup(false);
-      }, 3000);
-
+      const timer = setTimeout(() => setShowPopup(false), 3000);
       return () => clearTimeout(timer);
     }
   }, [showPopup]);
@@ -51,12 +50,7 @@ export default function Complaints() {
   };
 
   const submitComplaint = async () => {
-    if (
-      !form.name ||
-      !form.type ||
-      !form.description ||
-      !form.location
-    ) {
+    if (!form.name || !form.type || !form.description || !form.location) {
       setMessage("Please fill all the fields");
       setShowPopup(true);
       return;
@@ -64,7 +58,6 @@ export default function Complaints() {
 
     try {
       setLoading(true);
-
       await API.post("/complaints/create", form);
 
       setMessage("Complaint submitted successfully");
@@ -95,13 +88,8 @@ export default function Complaints() {
       setMessage("Complaint deleted successfully");
       setShowPopup(true);
 
-      setMyComplaints((prev) =>
-        prev.filter((complaint) => complaint._id !== id)
-      );
-
-      setComplaints((prev) =>
-        prev.filter((complaint) => complaint._id !== id)
-      );
+      setMyComplaints((prev) => prev.filter((c) => c._id !== id));
+      setComplaints((prev) => prev.filter((c) => c._id !== id));
     } catch (err) {
       setMessage(getApiErrorMessage(err));
       setShowPopup(true);
@@ -117,31 +105,24 @@ export default function Complaints() {
     <div className="complaints-page">
       <Navbar />
 
-      <div className="container mt-4">
-        <h2 className="complaints-title">Complaints</h2>
+      <div className="page-main">
+        <h2 className="complaints-title">Register a Complaint</h2>
+        <p className="complaints-lead">
+          Your safety matters. Report incidents securely and track your submissions below.
+        </p>
 
         <div className="complaint-form">
           <input
             className="form-control mb-3"
-            placeholder="Name"
+            placeholder="Your Name"
             value={form.name}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                name: e.target.value,
-              })
-            }
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
 
           <select
             className="form-select mb-3"
             value={form.type}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                type: e.target.value,
-              })
-            }
+            onChange={(e) => setForm({ ...form, type: e.target.value })}
           >
             <option value="">Select Complaint Type</option>
             <option value="Sexual harassment">Sexual Harassment</option>
@@ -155,26 +136,16 @@ export default function Complaints() {
           <textarea
             className="form-control mb-3"
             rows="4"
-            placeholder="Description"
+            placeholder="Describe what happened..."
             value={form.description}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                description: e.target.value,
-              })
-            }
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
 
           <input
             className="form-control mb-3"
             placeholder="Location"
             value={form.location}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                location: e.target.value,
-              })
-            }
+            onChange={(e) => setForm({ ...form, location: e.target.value })}
           />
 
           <button
@@ -202,117 +173,56 @@ export default function Complaints() {
 
         <h3
           className="complaints-subtitle"
-          style={{ cursor: "pointer" }}
           onClick={() => setShowMyComplaints(!showMyComplaints)}
         >
-          {showMyComplaints ? "▼" : "▶"} My Complaints
+          <span>
+            {showMyComplaints ? "▼" : "▶"} My Complaints
+          </span>
+          <span className="badge-count">{myComplaints.length}</span>
         </h3>
 
         {showMyComplaints &&
           (myComplaints.length === 0 ? (
-            <div className="alert alert-info">
-              You haven't submitted any complaints.
+            <div className="empty-state">
+              <div className="empty-state-icon">📋</div>
+              <p>You haven't submitted any complaints yet.</p>
+              <p className="empty-hint">Use the form above to register your first complaint.</p>
             </div>
           ) : (
-            myComplaints.map((c) => (
-              <div key={c._id} className="complaint-card">
-                <div className="complaint-header">
-                  <h5 className="card-title">{c.type}</h5>
-
-                  <span className="complaint-date">
-                    {new Date(c.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-
-                <div className="complaint-body">
-                  <p>
-                    <strong>Name:</strong> {c.name}
-                  </p>
-
-                  <p>
-                    <strong>Location:</strong> {c.location}
-                  </p>
-
-                  <p>
-                    <strong>Description</strong>
-                  </p>
-
-                  <div className="description-box">
-                    {c.description}
-                  </div>
-                </div>
-
-                <div className="complaint-footer">
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => deleteComplaint(c._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))
+            <div className="my-complaints-list">
+              {myComplaints.map((c) => (
+                <ComplaintCard
+                  key={c._id}
+                  data={c}
+                  showDelete
+                  onDelete={deleteComplaint}
+                />
+              ))}
+            </div>
           ))}
 
         <hr />
 
         <h3
           className="complaints-subtitle"
-          style={{ cursor: "pointer" }}
           onClick={() => setShowAllComplaints(!showAllComplaints)}
         >
-          {showAllComplaints ? "▼" : "▶"} All Complaints
+          <span>
+            {showAllComplaints ? "▼" : "▶"} All Complaints
+          </span>
+          <span className="badge-count">{complaints.length}</span>
         </h3>
 
         {showAllComplaints &&
           (complaints.length === 0 ? (
-            <div className="alert alert-info">
-              No complaints available.
+            <div className="empty-state">
+              <div className="empty-state-icon">🔍</div>
+              <p>No complaints have been registered yet.</p>
             </div>
           ) : (
             <div className="all-complaints-list">
               {complaints.map((c) => (
-                <div key={c._id} className="complaint-card">
-                  <div className="complaint-top">
-                    <div>
-                      <h4 className="complaint-type">{c.type}</h4>
-
-                      <span className="complaint-date">
-                        {new Date(c.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-
-                    <span className="complaint-status">
-                      Active
-                    </span>
-                  </div>
-
-                  <div className="complaint-content">
-                    <div className="complaint-row">
-                      <span className="label">Name</span>
-                      <span>{c.name}</span>
-                    </div>
-
-                    <div className="complaint-row">
-                      <span className="label"> Location</span>
-                      <span>{c.location}</span>
-                    </div>
-
-                    <div className="complaint-description">
-                      <h6>Description</h6>
-                      <p>{c.description}</p>
-                    </div>
-                  </div>
-
-                  <div className="complaint-footer">
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => deleteComplaint(c._id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
+                <ComplaintCard key={c._id} data={c} />
               ))}
             </div>
           ))}
