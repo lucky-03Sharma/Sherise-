@@ -303,10 +303,10 @@
     margin-bottom:12px;
 }
 
-.empty-hint{
-    font-size:.9rem;
-    opacity:.75;
-    margin-top:8px;
+.complaint-media-block h6 {
+  color: #a45a8d;
+  font-weight: 700;
+  margin: 16px 0 10px;
 }
 
 /* ==========================================

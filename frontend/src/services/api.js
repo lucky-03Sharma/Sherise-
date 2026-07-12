@@ -9,6 +9,9 @@ API.interceptors.request.use((req) => {
   if (token) {
     req.headers.Authorization = `Bearer ${token}`;
   }
+  if (req.data instanceof FormData) {
+    delete req.headers["Content-Type"];
+  }
   return req;
 });
 

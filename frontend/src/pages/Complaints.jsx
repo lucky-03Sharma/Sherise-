@@ -10,13 +10,23 @@ import API from "../services/api";
 import getApiErrorMessage from "../utils/getApiErrorMessage";
 import Navbar from "../components/Navbar";
 import ComplaintCard from "../components/ComplaintCard";
+import ComplaintMediaCapture from "../components/ComplaintMediaCapture";
 import IconCircle from "../components/IconCircle";
 import "../css/pages-common.css";
+import "../css/emergency-features.css";
 import "../css/complaint.css";
 
 export default function Complaints() {
   const [complaints, setComplaints] = useState([]);
   const [myComplaints, setMyComplaints] = useState([]);
+  const [mediaFiles, setMediaFiles] = useState({
+    imageFiles: [],
+    videoFiles: [],
+    voiceBlob: null,
+    latitude: "",
+    longitude: "",
+    gpsLabel: "",
+  });
 
   const [showMyComplaints, setShowMyComplaints] = useState(true);
   const [showAllComplaints, setShowAllComplaints] = useState(false);
@@ -67,7 +77,37 @@ export default function Complaints() {
 
     try {
       setLoading(true);
-      await API.post("/complaints/create", form);
+
+      const payload = new FormData();
+      payload.append("name", form.name);
+      payload.append("type", form.type);
+      payload.append("description", form.description);
+      payload.append("location", form.location);
+      payload.append("isAnonymous", String(form.isAnonymous));
+
+      if (mediaFiles.latitude && mediaFiles.longitude) {
+        payload.append("latitude", mediaFiles.latitude);
+        payload.append("longitude", mediaFiles.longitude);
+        if (!form.location.includes(",")) {
+          payload.set(
+            "location",
+            `${form.location} (GPS: ${mediaFiles.gpsLabel})`
+          );
+        }
+      }
+
+      mediaFiles.imageFiles.forEach((file) => payload.append("images", file));
+      mediaFiles.videoFiles.forEach((file) => payload.append("videos", file));
+
+      if (mediaFiles.voiceBlob) {
+        payload.append(
+          "voiceNote",
+          mediaFiles.voiceBlob,
+          `voice-note-${Date.now()}.webm`
+        );
+      }
+
+      await API.post("/complaints/create", payload);
 
       setMessage("Complaint submitted successfully");
       setShowPopup(true);
@@ -78,6 +118,14 @@ export default function Complaints() {
         description: "",
         location: "",
         isAnonymous: false,
+      });
+      setMediaFiles({
+        imageFiles: [],
+        videoFiles: [],
+        voiceBlob: null,
+        latitude: "",
+        longitude: "",
+        gpsLabel: "",
       });
 
       fetchComplaints();
@@ -156,6 +204,8 @@ export default function Complaints() {
             value={form.location}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
           />
+
+          <ComplaintMediaCapture onMediaChange={setMediaFiles} />
 
           <button
             className="btn btn-primary"

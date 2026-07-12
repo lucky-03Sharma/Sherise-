@@ -23,7 +23,15 @@ const helplineSchema = new mongoose.Schema(
     },
 
     location: {
-      type: String, 
+      type: String,
+    },
+
+    latitude: {
+      type: Number,
+    },
+
+    longitude: {
+      type: Number,
     },
 
     isEmergency: {

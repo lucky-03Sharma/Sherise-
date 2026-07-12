@@ -2,17 +2,32 @@ const TherapySession = require("../models/TherapySession");
 
 exports.createSession = async (req, res) => {
     try {
-        const { issueType, description, sessionDate } = req.body;
+        const { psychologistName, issueType, description, sessionDate } = req.body;
+
+        if (!psychologistName || !issueType || !description || !sessionDate) {
+            return res.status(400).json({
+                message: "Therapist, issue type, description, and appointment date are required",
+            });
+        }
+
+        const parsedDate = new Date(sessionDate);
+        if (Number.isNaN(parsedDate.getTime()) || parsedDate <= new Date()) {
+            return res.status(400).json({
+                message: "Please choose a valid future appointment date",
+            });
+        }
 
         const session = await TherapySession.create({
             userId: req.user.id,
+            psychologistName,
             issueType,
             description,
-            sessionDate,
+            sessionDate: parsedDate,
+            status: "requested",
         });
 
         res.status(201).json({
-            message: "Therapy session requested",
+            message: "Therapy session booked successfully",
             session,
         });
 

@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhone, faPhoneVolume } from "@fortawesome/free-solid-svg-icons";
+import { faPhone, faPhoneVolume, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import API from "../services/api";
 import Navbar from "../components/Navbar";
 import IconCircle from "../components/IconCircle";
+import VoiceHelpSOS from "../components/VoiceHelpSOS";
+import LiveAlertsPanel from "../components/LiveAlertsPanel";
+import { dialHelpline, startEmergencyCall } from "../services/emergencyService";
+import { startLiveLocationSharing } from "../services/liveLocationClient";
+import getApiErrorMessage from "../utils/getApiErrorMessage";
 import "../css/pages-common.css";
+import "../css/emergency-features.css";
 
 const categoryLabels = {
   police: "Police",
@@ -16,6 +22,8 @@ const categoryLabels = {
 
 export default function Helplines() {
   const [data, setData] = useState([]);
+  const [callingId, setCallingId] = useState(null);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchHelplines = async () => {
@@ -30,6 +38,24 @@ export default function Helplines() {
     fetchHelplines();
   }, []);
 
+  const handleCallNow = async (helpline) => {
+    setCallingId(helpline._id || helpline.phone);
+    setMessage("");
+
+    try {
+      const result = await startEmergencyCall(helpline, "manual_call");
+      startLiveLocationSharing(result.alert._id);
+      setMessage(
+        `Live GPS shared with ${helpline.name}. Opening phone dialer to call ${helpline.phone}…`
+      );
+      dialHelpline(result.dialNumber || helpline.phone);
+    } catch (err) {
+      setMessage(getApiErrorMessage(err, "Could not start emergency call. Allow location access."));
+    } finally {
+      setCallingId(null);
+    }
+  };
+
   return (
     <div className="service-page app-page">
       <Navbar />
@@ -37,8 +63,21 @@ export default function Helplines() {
       <div className="page-main">
         <h2 className="service-title">Emergency Helplines</h2>
         <p className="service-subtitle">
-          Reach out instantly — these helplines are available 24/7 for urgent support.
+          Call Now shares your live GPS with the helpline centre, then opens your phone dialer
+          to connect directly.
         </p>
+
+        {message && <div className="alert alert-info">{message}</div>}
+
+        <VoiceHelpSOS
+          onTriggered={(result) =>
+            setMessage(
+              `Voice SOS activated — calling ${result.helpline.name} with live location.`
+            )
+          }
+        />
+
+        <LiveAlertsPanel />
 
         {data.length === 0 ? (
           <div className="empty-state">
@@ -88,10 +127,18 @@ export default function Helplines() {
                 </div>
 
                 <div className="info-card-footer">
-                  <a href={`tel:${h.phone}`} className="btn btn-danger btn-with-icon">
-                    <FontAwesomeIcon icon={faPhone} />
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-with-icon"
+                    disabled={callingId === (h._id || h.phone)}
+                    onClick={() => handleCallNow(h)}
+                  >
+                    <FontAwesomeIcon
+                      icon={callingId === (h._id || h.phone) ? faSpinner : faPhone}
+                      spin={callingId === (h._id || h.phone)}
+                    />
                     Call Now
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}

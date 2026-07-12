@@ -35,6 +35,30 @@ const complaintSchema = new mongoose.Schema(
       type: String,
     },
 
+    latitude: {
+      type: Number,
+    },
+
+    longitude: {
+      type: Number,
+    },
+
+    images: [
+      {
+        type: String,
+      },
+    ],
+
+    videos: [
+      {
+        type: String,
+      },
+    ],
+
+    voiceNote: {
+      type: String,
+    },
+
     isAnonymous: {
       type: Boolean,
       default: false,

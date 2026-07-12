@@ -9,6 +9,11 @@ export default function ComplaintCard({ data, showDelete = false, onDelete }) {
     .slice(0, 2)
     .toUpperCase();
 
+  const hasMedia =
+    (data.images && data.images.length > 0) ||
+    (data.videos && data.videos.length > 0) ||
+    data.voiceNote;
+
   return (
     <div className="complaint-card">
       <div className="complaint-top">
@@ -39,10 +44,37 @@ export default function ComplaintCard({ data, showDelete = false, onDelete }) {
           <span>{data.location}</span>
         </div>
 
+        {data.latitude && data.longitude && (
+          <div className="complaint-row">
+            <span className="label">GPS</span>
+            <span>
+              {data.latitude.toFixed?.(5) ?? data.latitude},{" "}
+              {data.longitude.toFixed?.(5) ?? data.longitude}
+            </span>
+          </div>
+        )}
+
         <div className="complaint-description">
           <h6>Description</h6>
           <p>{data.description}</p>
         </div>
+
+        {hasMedia && (
+          <div className="complaint-media-block">
+            <h6>Evidence</h6>
+            <div className="complaint-media-grid">
+              {(data.images || []).map((src) => (
+                <img key={src} src={src} alt="Complaint evidence" />
+              ))}
+              {(data.videos || []).map((src) => (
+                <video key={src} src={src} controls />
+              ))}
+            </div>
+            {data.voiceNote && (
+              <audio className="complaint-voice-note" src={data.voiceNote} controls />
+            )}
+          </div>
+        )}
       </div>
 
       {showDelete && (

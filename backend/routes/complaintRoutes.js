@@ -9,9 +9,10 @@ const {
   deleteComplaint,
 } = require("../controllers/complaintController");
 const protect = require("../middlewares/authMiddleware");
+const { complaintUpload } = require("../middlewares/upload");
 
 router.get("/", getAllComplaints);
-router.post("/create", protect, createComplaint);
+router.post("/create", protect, complaintUpload, createComplaint);
 router.get("/my", protect, getMyComplaints);
 router.get("/:id", getComplaintsById);
 router.put("/:id", protect, updateComplaint);
