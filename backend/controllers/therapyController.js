@@ -36,12 +36,94 @@ exports.createSession = async (req, res) => {
     }
 };
 
+const THERAPISTS = [
+    {
+        name: "Dr. Shrradha Sidhwani",
+        specialization: "Clinical Psychologist",
+        bestFor: [
+            "Stress & Burnout",
+            "Anxiety & Panic",
+            "Trauma & Abuse",
+            "Anger Management",
+            "Women's Mental Health",
+        ],
+        problems: ["stress", "anxiety", "trauma", "anger", "women"],
+    },
+    {
+        name: "Dr. Harish Shetty",
+        specialization: "Psychiatrist",
+        bestFor: ["Depression", "Anxiety & Panic", "Adolescents", "Family Therapy"],
+        problems: ["depression", "anxiety", "adolescents", "family"],
+    },
+    {
+        name: "Dr. Sonali Gupta",
+        specialization: "Clinical Psychologist",
+        bestFor: ["Trauma & Abuse", "Grief", "Relationships", "Emotional Wellness", "Women's Mental Health"],
+        problems: ["trauma", "grief", "relationships", "women"],
+    },
+    {
+        name: "Dr. Samir Parikh",
+        specialization: "Psychiatrist",
+        bestFor: ["Stress & Burnout", "Depression", "Workplace Mental Health"],
+        problems: ["stress", "depression", "workplace"],
+    },
+    {
+        name: "Dr. Anand Nadkarni",
+        specialization: "Psychiatrist",
+        bestFor: ["Family Therapy", "Stress & Burnout", "Organizational Psychology"],
+        problems: ["family", "stress", "organizational"],
+    },
+    {
+        name: "Dr. Kamna Chhibber",
+        specialization: "Clinical Psychologist",
+        bestFor: ["Trauma & Abuse", "Relationships", "Women's Mental Health"],
+        problems: ["trauma", "relationships", "women"],
+    },
+    {
+        name: "Dr. Amit Malik",
+        specialization: "Psychiatrist",
+        bestFor: ["Anxiety & Panic", "OCD", "Depression"],
+        problems: ["anxiety", "ocd", "depression"],
+    },
+    {
+        name: "Dr. Avinash De Sousa",
+        specialization: "Psychiatrist",
+        bestFor: ["Addiction", "Anxiety & Panic", "Depression", "Stress"],
+        problems: ["addiction", "anxiety", "depression", "stress"],
+    },
+];
+
+const normalizeProblem = (value) =>
+    (value || "")
+        .toString()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+
+const matchesProblem = (therapistProblems, query) => {
+    const normalizedQuery = normalizeProblem(query);
+    return therapistProblems.some((problem) => {
+        const normalizedProblem = normalizeProblem(problem);
+        return (
+            normalizedProblem === normalizedQuery ||
+            normalizedProblem.includes(normalizedQuery) ||
+            normalizedQuery.includes(normalizedProblem)
+        );
+    });
+};
+
 exports.getTherapists = async (req, res) => {
     try {
-        res.json([
-            { name: "Dr. Priya Sharma", specialization: "Anxiety & Stress" },
-            { name: "Dr. Neha Verma", specialization: "Trauma Recovery" },
-        ]);
+        let therapists = THERAPISTS;
+        const { problem } = req.query;
+
+        if (problem) {
+            therapists = therapists.filter((therapist) =>
+                matchesProblem(therapist.problems, problem)
+            );
+        }
+
+        res.json(therapists);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
