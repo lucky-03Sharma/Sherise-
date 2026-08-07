@@ -3,7 +3,7 @@ import API from "../services/api";
 import getApiErrorMessage from "../utils/getApiErrorMessage";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import "../css/Login.css";
+import "../css/login.css";
 
 export default function Login() {
   const location = useLocation();
