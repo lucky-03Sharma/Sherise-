@@ -12,10 +12,12 @@ import {
 import API from "../services/api";
 import Navbar from "../components/Navbar";
 import IconCircle from "../components/IconCircle";
+import { useLanguage } from "../contexts/LanguageContext";
 import "../css/pages-common.css";
 import "../css/dashboard.css";
 
 export default function Dashboard() {
+  const { t } = useLanguage();
   const [stats, setStats] = useState({
     complaints: 0,
     myComplaints: 0,
@@ -100,9 +102,9 @@ export default function Dashboard() {
 
       <div className="page-main">
         <div className="dashboard-hero">
-          <h1 className="dashboard-greeting">Welcome back, {userName}!</h1>
+          <h1 className="dashboard-greeting">{t("Welcome back")}, {userName}!</h1>
           <p className="dashboard-tagline">
-            Your safe space for support, reporting, and healing.
+            {t("Your safe space for support, reporting, and healing.")}
           </p>
         </div>
 
@@ -113,7 +115,7 @@ export default function Dashboard() {
             </span>
             <div className="stat-info">
               <span className="stat-number">{stats.myComplaints}</span>
-              <span className="stat-label">My Complaints</span>
+              <span className="stat-label">{t("My Complaints")}</span>
             </div>
           </div>
 
@@ -123,7 +125,7 @@ export default function Dashboard() {
             </span>
             <div className="stat-info">
               <span className="stat-number">{stats.complaints}</span>
-              <span className="stat-label">Total Reports</span>
+              <span className="stat-label">{t("Total Reports")}</span>
             </div>
           </div>
 
@@ -133,7 +135,7 @@ export default function Dashboard() {
             </span>
             <div className="stat-info">
               <span className="stat-number">{stats.therapySessions}</span>
-              <span className="stat-label">Therapy Sessions</span>
+              <span className="stat-label">{t("Therapy Sessions")}</span>
             </div>
           </div>
 
@@ -143,12 +145,12 @@ export default function Dashboard() {
             </span>
             <div className="stat-info">
               <span className="stat-number">{stats.consultations}</span>
-              <span className="stat-label">Consultations</span>
+              <span className="stat-label">{t("Consultations")}</span>
             </div>
           </div>
         </div>
 
-        <h3 className="dashboard-section-title">Quick Actions</h3>
+        <h3 className="dashboard-section-title">{t("Quick Actions")}</h3>
         <div className="quick-links-grid">
           {quickLinks.map((link) => (
             <Link to={link.to} className="quick-link-card" key={link.to}>
@@ -156,8 +158,8 @@ export default function Dashboard() {
                 <IconCircle icon={link.icon} />
               </span>
               <div>
-                <h4>{link.label}</h4>
-                <p>{link.desc}</p>
+                <h4>{t(link.label)}</h4>
+                <p>{t(link.desc)}</p>
               </div>
             </Link>
           ))}

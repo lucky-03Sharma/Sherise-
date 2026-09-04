@@ -70,6 +70,17 @@ const complaintSchema = new mongoose.Schema(
       default: "medium",
     },
 
+    severityScore: {
+      type: Number,
+      default: 0,
+    },
+
+    severityTerms: [
+      {
+        type: String,
+      },
+    ],
+
     statusHistory: [
       {
         status: {

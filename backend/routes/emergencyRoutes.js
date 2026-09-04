@@ -9,10 +9,12 @@ const {
   getActiveEmergencyAlerts,
   getNearestPoliceHelpline,
   triggerVoiceHelp,
+  triggerSOS,
 } = require("../controllers/emergencyController");
 
 router.post("/call", protect, startEmergencyCall);
 router.post("/voice-help", protect, triggerVoiceHelp);
+router.post("/sos", protect, triggerSOS);
 router.put("/:id/location", protect, updateLiveLocation);
 router.put("/:id/end", protect, endEmergencyCall);
 router.get("/my", protect, getMyEmergencyAlerts);

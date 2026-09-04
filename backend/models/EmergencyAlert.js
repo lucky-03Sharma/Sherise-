@@ -30,7 +30,7 @@ const emergencyAlertSchema = new mongoose.Schema(
     category: String,
     triggerType: {
       type: String,
-      enum: ["manual_call", "voice_help"],
+      enum: ["manual_call", "voice_help", "sos_button"],
       default: "manual_call",
     },
     latitude: Number,

@@ -12,11 +12,13 @@ import Navbar from "../components/Navbar";
 import ComplaintCard from "../components/ComplaintCard";
 import ComplaintMediaCapture from "../components/ComplaintMediaCapture";
 import IconCircle from "../components/IconCircle";
+import { useLanguage } from "../contexts/LanguageContext";
 import "../css/pages-common.css";
 import "../css/emergency-features.css";
 import "../css/complaint.css";
 
 export default function Complaints() {
+  const { t } = useLanguage();
   const [complaints, setComplaints] = useState([]);
   const [myComplaints, setMyComplaints] = useState([]);
   const [mediaFiles, setMediaFiles] = useState({
@@ -163,15 +165,24 @@ export default function Complaints() {
       <Navbar />
 
       <div className="page-main">
-        <h2 className="complaints-title">Register a Complaint</h2>
+        <h2 className="complaints-title">{t("Register a Complaint")}</h2>
         <p className="complaints-lead">
-          Your safety matters. Report incidents securely and track your submissions below.
+          {t("Your safety matters. Report incidents securely and track your submissions below.")}
         </p>
+
+        <div className="ai-severity-info-banner alert alert-light border mb-4 d-flex align-items-center gap-3">
+          <div className="severity-badge severity-badge-urgent flex-shrink-0">
+            AI Severity
+          </div>
+          <small className="text-muted">
+            {t("Complaints are automatically analyzed by our AI severity detection engine. Most urgent cases involving physical danger, violence, or threats are prioritized first for rapid response.")}
+          </small>
+        </div>
 
         <div className="complaint-form">
           <input
             className="form-control mb-3"
-            placeholder="Your Name"
+            placeholder={t("Your Name")}
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
@@ -181,26 +192,26 @@ export default function Complaints() {
             value={form.type}
             onChange={(e) => setForm({ ...form, type: e.target.value })}
           >
-            <option value="">Select Complaint Type</option>
-            <option value="Sexual harassment">Sexual Harassment</option>
-            <option value="Domestic Violence">Domestic Violence</option>
-            <option value="Rape">Rape</option>
-            <option value="Threats">Threats</option>
-            <option value="Mental Torture">Mental Torture</option>
-            <option value="Other">Other</option>
+            <option value="">{t("Select Complaint Type")}</option>
+            <option value="Sexual harassment">{t("Sexual Harassment")}</option>
+            <option value="Domestic Violence">{t("Domestic Violence")}</option>
+            <option value="Rape">{t("Rape")}</option>
+            <option value="Threats">{t("Threats")}</option>
+            <option value="Mental Torture">{t("Mental Torture")}</option>
+            <option value="Other">{t("Other")}</option>
           </select>
 
           <textarea
             className="form-control mb-3"
             rows="4"
-            placeholder="Describe what happened..."
+            placeholder={t("Describe what happened...")}
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
 
           <input
             className="form-control mb-3"
-            placeholder="Location"
+            placeholder={t("Location")}
             value={form.location}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
           />
@@ -212,7 +223,7 @@ export default function Complaints() {
             onClick={submitComplaint}
             disabled={loading}
           >
-            {loading ? "Submitting..." : "Submit Complaint"}
+            {loading ? t("Submitting...") : t("Submit Complaint")}
           </button>
 
           {showPopup && (

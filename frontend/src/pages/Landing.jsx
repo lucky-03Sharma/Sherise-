@@ -9,114 +9,134 @@ import {
   faShieldHalved,
   faUserCheck,
   faUserDoctor,
+  faArrowRight,
+  faPersonDress,
 } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import IconCircle from "../components/IconCircle";
+import { useLanguage } from "../contexts/LanguageContext";
 import "../css/Landing.css";
 
-const services = [
-  {
-    icon: faClipboardList,
-    title: "Complaint Portal",
-    text: "Report complaints securely and track their progress online.",
-  },
-  {
-    icon: faScaleBalanced,
-    title: "Legal Consultation",
-    text: "Get professional legal guidance whenever you need it.",
-  },
-  {
-    icon: faUserDoctor,
-    title: "Therapy Support",
-    text: "Access counseling and therapy sessions confidentially.",
-  },
-  {
-    icon: faPhoneVolume,
-    title: "Emergency Helplines",
-    text: "Find important emergency contacts instantly.",
-  },
-];
-
-const whyUs = [
-  {
-    icon: faShieldHalved,
-    title: "Privacy First",
-    text: "Your information stays protected.",
-  },
-  {
-    icon: faBolt,
-    title: "Quick Support",
-    text: "Fast access to emergency services.",
-  },
-  {
-    icon: faUserCheck,
-    title: "Trusted Experts",
-    text: "Verified legal and therapy support.",
-  },
-  {
-    icon: faHeart,
-    title: "Empowerment",
-    text: "Helping women build a safer future.",
-  },
-];
-
 export default function Landing() {
+  const { t } = useLanguage();
+
+  const services = [
+    {
+      icon: faClipboardList,
+      title: t("Complaint Portal"),
+      text: t("Report complaints securely with AI priority detection and live tracking."),
+    },
+    {
+      icon: faScaleBalanced,
+      title: t("Legal Consultation"),
+      text: t("Get professional legal guidance whenever you need it."),
+    },
+    {
+      icon: faUserDoctor,
+      title: t("Therapy Support"),
+      text: t("Access counseling and therapy sessions confidentially."),
+    },
+    {
+      icon: faPhoneVolume,
+      title: t("Emergency Helplines"),
+      text: t("Instant access to nearest police, SheRise members, and 112 SOS."),
+    },
+  ];
+
+  const whyUs = [
+    {
+      icon: faShieldHalved,
+      title: t("Privacy First"),
+      text: t("Your identity and reports remain encrypted and secure."),
+    },
+    {
+      icon: faBolt,
+      title: t("Quick Support"),
+      text: t("AI severity prioritization and instant 1-tap SOS connection."),
+    },
+    {
+      icon: faUserCheck,
+      title: t("Trusted Experts"),
+      text: t("Verified psychologists, lawyers, and community responders."),
+    },
+    {
+      icon: faHeart,
+      title: t("Empowerment"),
+      text: t("Helping women build a safer, confident future together."),
+    },
+  ];
+
   return (
     <div className="landing">
       <Navbar />
 
       <section className="hero">
         <div className="hero-text">
-          <h1>Your Voice. Your Strength. Your Safety.</h1>
+          <div className="hero-badge">
+            <FontAwesomeIcon icon={faPersonDress} />
+            <span>{t("Dedicated Safety & Wellness Ecosystem")}</span>
+          </div>
+
+          <h1>{t("Your Voice. Your Strength. Your Safety.")}</h1>
+
           <p className="hero-subtitle">
-            SheRise is a secure platform that empowers women through legal
-            guidance, complaint registration, therapy support and emergency
-            assistance.
+            {t(
+              "SheRise provides a confidential haven for women to report incidents, access certified mental health therapy, consult legal professionals, and trigger instant emergency SOS to nearest responders."
+            )}
           </p>
 
           <div className="hero-buttons">
-            <Link to="/register">
-              <button className="primary-btn">Get Started</button>
+            <Link to="/register" className="primary-btn">
+              <span>{t("Get Protected Now")}</span>
+              <FontAwesomeIcon icon={faArrowRight} />
             </Link>
-            <Link to="/login">
-              <button className="secondary-btn">Login</button>
+            <Link to="/helplines" className="secondary-btn">
+              <FontAwesomeIcon icon={faPhoneVolume} />
+              <span>{t("Emergency Helplines")}</span>
             </Link>
           </div>
         </div>
       </section>
 
       <section className="services" id="services">
-        <h2>Our Services</h2>
+        <h2>{t("Comprehensive Support Services")}</h2>
         <div className="cards">
-          {services.map((item) => (
-            <div className="card" key={item.title}>
-              <IconCircle icon={item.icon} className="card-icon" />
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
+          {services.map((service) => (
+            <div className="card" key={service.title}>
+              <div className="card-icon">
+                <IconCircle icon={service.icon} />
+              </div>
+              <h3>{service.title}</h3>
+              <p>{service.text}</p>
             </div>
           ))}
         </div>
       </section>
 
       <section className="why" id="why">
-        <h2>Why Choose SheRise?</h2>
-        <div className="cards">
-          {whyUs.map((item) => (
-            <div className="card" key={item.title}>
-              <IconCircle icon={item.icon} className="card-icon card-icon--soft" />
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </div>
-          ))}
+        <div className="container">
+          <h2>{t("Why Choose SheRise?")}</h2>
+          <div className="why-grid">
+            {whyUs.map((item) => (
+              <div className="why-card" key={item.title}>
+                <div className="card-icon">
+                  <IconCircle icon={item.icon} />
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       <section className="cta">
-        <h2>Ready to Take the First Step?</h2>
-        <p>Join SheRise today and access support whenever you need it.</p>
-        <Link to="/register">
-          <button className="primary-btn">Register Now</button>
+        <h2>{t("Ready to Take the First Step?")}</h2>
+        <p>{t("Join SheRise today and access support whenever you need it.")}</p>
+        <Link to="/register" className="cta-btn">
+          <span>{t("Register Now")}</span>
+          <FontAwesomeIcon icon={faArrowRight} />
         </Link>
       </section>
 

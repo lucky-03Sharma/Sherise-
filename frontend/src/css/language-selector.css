@@ -1,0 +1,137 @@
+.language-selector-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(253, 242, 248, 0.85);
+  border: 1px solid rgba(230, 73, 128, 0.22);
+  color: #5c1b48;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lang-btn:hover,
+.lang-btn.active {
+  background: #ffffff;
+  border-color: #d63384;
+  color: #c2255c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(214, 51, 132, 0.12);
+}
+
+.globe-icon {
+  font-size: 1rem;
+  color: #d63384;
+}
+
+.lang-label {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.lang-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  padding: 8px;
+  z-index: 9999;
+  animation: fadeInDown 0.2s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lang-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px 6px;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #343a40;
+}
+
+.sarvam-badge {
+  font-size: 0.68rem;
+  color: #7048e8;
+  background: #f3f0ff;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.lang-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-top: 6px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.lang-option-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.lang-option-item:hover {
+  background: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.lang-option-item.selected {
+  background: #f3f0ff;
+  border-color: #d0bfff;
+}
+
+.lang-option-names {
+  display: flex;
+  flex-direction: column;
+}
+
+.lang-native {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.lang-english {
+  font-size: 0.72rem;
+  color: #868e96;
+}
+
+.lang-check-icon {
+  color: #7048e8;
+  font-size: 0.8rem;
+}

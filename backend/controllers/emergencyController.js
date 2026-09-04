@@ -16,10 +16,43 @@ const haversineKm = (lat1, lon1, lat2, lon2) => {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 };
 
-const pickNearestHelpline = (helplines, latitude, longitude, preferPolice = false) => {
-  const pool = preferPolice
-    ? helplines.filter((h) => h.category === "police")
-    : helplines;
+const DEFAULT_HELPLINES = [
+  {
+    name: "National Emergency Police (112)",
+    phone: "112",
+    category: "police",
+    isEmergency: true,
+    location: "National Emergency Response Support System",
+  },
+  {
+    name: "Women in Distress Helpline",
+    phone: "1091",
+    category: "police",
+    isEmergency: true,
+    location: "National Women Police Cell",
+  },
+  {
+    name: "SheRise Rapid Response Team",
+    phone: "181",
+    category: "sherise",
+    isEmergency: true,
+    location: "SheRise Dedicated Member Support",
+  },
+];
+
+const pickNearestHelpline = (helplines = [], latitude, longitude, preference = "any") => {
+  const merged = [...(helplines || []), ...DEFAULT_HELPLINES];
+
+  let pool = merged;
+  if (preference === "police") {
+    pool = merged.filter((h) => h.category === "police");
+  } else if (preference === "sherise") {
+    pool = merged.filter((h) => h.category === "sherise");
+  } else if (preference === "support") {
+    pool = merged.filter((h) => h.category === "police" || h.category === "sherise" || h.isEmergency);
+  }
+
+  if (!pool.length) pool = merged;
 
   const withCoords = pool.filter(
     (h) => typeof h.latitude === "number" && typeof h.longitude === "number"
@@ -36,8 +69,7 @@ const pickNearestHelpline = (helplines, latitude, longitude, preferPolice = fals
   return (
     pool.find((h) => h.isEmergency) ||
     pool[0] ||
-    helplines.find((h) => h.category === "police") ||
-    helplines[0]
+    DEFAULT_HELPLINES[0]
   );
 };
 
@@ -266,3 +298,55 @@ exports.triggerVoiceHelp = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.triggerSOS = async (req, res) => {
+  try {
+    const { latitude, longitude, accuracy, preferredTarget = "support" } = req.body;
+
+    const helplines = await Helpline.find();
+    const nearestResponder = pickNearestHelpline(
+      helplines,
+      latitude !== undefined ? Number(latitude) : undefined,
+      longitude !== undefined ? Number(longitude) : undefined,
+      preferredTarget
+    );
+
+    const lat = latitude !== undefined ? Number(latitude) : 0;
+    const lng = longitude !== undefined ? Number(longitude) : 0;
+    const user = await User.findById(req.user.id);
+
+    const alert = await EmergencyAlert.create({
+      userId: req.user.id,
+      userName: user?.name,
+      helplineId: nearestResponder._id || undefined,
+      helplineName: nearestResponder.name,
+      helplinePhone: nearestResponder.phone,
+      category: nearestResponder.category,
+      triggerType: "sos_button",
+      latitude: lat,
+      longitude: lng,
+      accuracy: accuracy ? Number(accuracy) : undefined,
+      mapsLink: toMapsLink(lat, lng),
+      locationHistory: [
+        {
+          latitude: lat,
+          longitude: lng,
+          accuracy: accuracy ? Number(accuracy) : undefined,
+          recordedAt: new Date(),
+        },
+      ],
+      status: "active",
+    });
+
+    res.status(201).json({
+      message: `SOS Activated — Connecting you to nearest responder: ${nearestResponder.name}`,
+      alert,
+      responder: nearestResponder,
+      dialNumber: nearestResponder.phone.replace(/\s/g, ""),
+      mapsLink: alert.mapsLink,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+

@@ -1,7 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrashCan,
+  faTriangleExclamation,
+  faCircleExclamation,
+  faBolt,
+  faCircleCheck,
+} from "@fortawesome/free-solid-svg-icons";
+import { useLanguage } from "../contexts/LanguageContext";
+import "../css/severity.css";
 
 export default function ComplaintCard({ data, showDelete = false, onDelete }) {
+  const { t } = useLanguage();
+  const priority = data.priority || "medium";
+
   const initials = (data.type || "?")
     .split(" ")
     .map((w) => w[0])
@@ -14,20 +25,56 @@ export default function ComplaintCard({ data, showDelete = false, onDelete }) {
     (data.videos && data.videos.length > 0) ||
     data.voiceNote;
 
+  const getSeverityBadge = () => {
+    switch (priority) {
+      case "urgent":
+        return (
+          <span className="severity-badge severity-badge-urgent" title="AI Severity: Most Urgent — Prioritized First">
+            <FontAwesomeIcon icon={faTriangleExclamation} />
+            {t("Urgent")} (AI Priority)
+          </span>
+        );
+      case "high":
+        return (
+          <span className="severity-badge severity-badge-high" title="AI Severity: High Priority">
+            <FontAwesomeIcon icon={faBolt} />
+            {t("High")}
+          </span>
+        );
+      case "low":
+        return (
+          <span className="severity-badge severity-badge-low" title="AI Severity: Low Priority">
+            <FontAwesomeIcon icon={faCircleCheck} />
+            {t("Low")}
+          </span>
+        );
+      default:
+        return (
+          <span className="severity-badge severity-badge-medium" title="AI Severity: Medium Priority">
+            <FontAwesomeIcon icon={faCircleExclamation} />
+            {t("Medium")}
+          </span>
+        );
+    }
+  };
+
   return (
-    <div className="complaint-card">
+    <div className={`complaint-card severity-${priority}`}>
       <div className="complaint-top">
         <div className="complaint-top-info">
           <span className="complaint-avatar">{initials}</span>
           <div>
-            <h4 className="complaint-type">{data.type}</h4>
-            <span className="complaint-date">
-              {new Date(data.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </span>
+            <h4 className="complaint-type">{t(data.type)}</h4>
+            <div className="severity-meta-row">
+              {getSeverityBadge()}
+              <span className="complaint-date">
+                {new Date(data.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+            </div>
           </div>
         </div>
         <span className="complaint-status">Active</span>

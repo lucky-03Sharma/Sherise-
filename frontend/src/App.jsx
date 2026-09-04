@@ -8,6 +8,7 @@ import Helplines from "./pages/Helplines";
 import Consultation from "./pages/Consultation";
 import Therapy from "./pages/Therapy";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SOSButton from "./components/SOSButton";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           </ProtectedRoute>
         } />
       </Routes>
+      <SOSButton />
     </BrowserRouter>
   );
 }

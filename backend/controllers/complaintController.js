@@ -1,4 +1,5 @@
 const Complaint = require("../models/Complaint");
+const { detectSeverity } = require("../utils/severityDetector");
 
 const buildMediaPaths = (files = {}) => {
   const images = (files.images || []).map((f) => `/uploads/images/${f.filename}`);
@@ -16,6 +17,9 @@ exports.createComplaint = async (req, res) => {
 
     const { images, videos, voiceNote } = buildMediaPaths(req.files);
 
+    // AI Severity Detection — auto-assign priority
+    const severity = detectSeverity(type, description);
+
     const complaint = await Complaint.create({
       userId: req.user.id,
       name,
@@ -28,6 +32,9 @@ exports.createComplaint = async (req, res) => {
       images,
       videos,
       voiceNote,
+      priority: severity.priority,
+      severityScore: severity.score,
+      severityTerms: severity.matchedTerms,
       statusHistory: [{ status: "pending", note: "Complaint registered" }],
     });
 
@@ -40,9 +47,21 @@ exports.createComplaint = async (req, res) => {
   }
 };
 
+// Priority sort order: urgent first
+const PRIORITY_ORDER = { urgent: 0, high: 1, medium: 2, low: 3 };
+
 exports.getAllComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find().sort({ createdAt: -1 });
+
+    // Sort by priority (urgent first), then by date (newest first)
+    complaints.sort((a, b) => {
+      const pa = PRIORITY_ORDER[a.priority] ?? 2;
+      const pb = PRIORITY_ORDER[b.priority] ?? 2;
+      if (pa !== pb) return pa - pb;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
     res.json({ complaints });
   } catch (error) {
     res.status(500).json({ error: error.message });

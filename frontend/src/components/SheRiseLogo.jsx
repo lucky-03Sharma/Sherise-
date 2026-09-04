@@ -9,7 +9,10 @@ export default function SheRiseLogo({ linked = true, size = "default" }) {
       <span className="sherise-logo-mark" aria-hidden="true">
         <FontAwesomeIcon icon={faPersonDress} />
       </span>
-      <span className="sherise-logo-text">SheRise</span>
+      <div className="sherise-logo-text-group">
+        <span className="sherise-logo-text">SheRise</span>
+        <span className="sherise-logo-tagline">Empower & Protect</span>
+      </div>
     </>
   );
 

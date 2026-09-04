@@ -3,9 +3,11 @@ import API from "../services/api";
 import getApiErrorMessage from "../utils/getApiErrorMessage";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useLanguage } from "../contexts/LanguageContext";
 import "../css/login.css";
 
 export default function Login() {
+  const { t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -72,13 +74,13 @@ export default function Login() {
             <div className="col-md-5">
               <div className="card shadow-lg login-card">
                 <div className="card-body">
-                  <h2 className="text-center mb-4">Login</h2>
+                  <h2 className="text-center mb-4">{t("Login")}</h2>
 
                   <form onSubmit={handleLogin}>
                     <input
                       type="email"
                       className="form-control mb-3"
-                      placeholder="Email"
+                      placeholder={t("Email")}
                       value={form.email}
                       disabled={loading}
                       onChange={(e) =>
@@ -89,7 +91,7 @@ export default function Login() {
                     <input
                       type="password"
                       className="form-control mb-3"
-                      placeholder="Password"
+                      placeholder={t("Password")}
                       value={form.password}
                       disabled={loading}
                       onChange={(e) =>
@@ -102,7 +104,7 @@ export default function Login() {
                       className="btn btn-primary w-100"
                       disabled={loading}
                     >
-                      {loading ? "Logging in..." : "Login"}
+                      {loading ? t("Logging in...") : t("Login")}
                     </button>
                   </form>
 
@@ -117,8 +119,8 @@ export default function Login() {
                   )}
 
                   <p className="text-center mt-3">
-                    Don't have an account?{" "}
-                    <Link to="/register">Register here</Link>
+                    {t("Don't have an account?")}{" "}
+                    <Link to="/register">{t("Register here")}</Link>
                   </p>
                 </div>
               </div>

@@ -4,8 +4,10 @@ import getApiErrorMessage from "../utils/getApiErrorMessage";
 import "../css/Register.css";
 import Navbar from "../components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Register() {
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -80,12 +82,12 @@ export default function Register() {
             <div className="col-md-5">
               <div className="card shadow-lg register-card">
                 <div className="card-body">
-                  <h2 className="text-center mb-4">Register</h2>
+                  <h2 className="text-center mb-4">{t("Register")}</h2>
 
                   <form onSubmit={handleRegister}>
                     <input
                       className="form-control mb-3"
-                      placeholder="Name"
+                      placeholder={t("Name")}
                       value={form.name}
                       disabled={loading}
                       onChange={(e) =>
@@ -96,7 +98,7 @@ export default function Register() {
                     <input
                       className="form-control mb-3"
                       type="email"
-                      placeholder="Email"
+                      placeholder={t("Email")}
                       value={form.email}
                       disabled={loading}
                       onChange={(e) =>
@@ -107,7 +109,7 @@ export default function Register() {
                     <input
                       className="form-control mb-3"
                       type="password"
-                      placeholder="Password"
+                      placeholder={t("Password")}
                       value={form.password}
                       disabled={loading}
                       onChange={(e) =>
@@ -120,7 +122,7 @@ export default function Register() {
                       className="btn btn-primary w-100"
                       disabled={loading}
                     >
-                      {loading ? "Registering..." : "Register"}
+                      {loading ? t("Registering...") : t("Register")}
                     </button>
                   </form>
 
@@ -137,8 +139,8 @@ export default function Register() {
                   )}
 
                   <p className="text-center mt-3">
-                    Already have an account?{" "}
-                    <Link to="/login">Login here</Link>
+                    {t("Already have an account?")}{" "}
+                    <Link to="/login">{t("Login here")}</Link>
                   </p>
                 </div>
               </div>

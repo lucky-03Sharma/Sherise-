@@ -1,0 +1,84 @@
+/* AI Severity Badges & Card Accents */
+
+.complaint-card.severity-urgent {
+  border-left: 5px solid #dc3545 !important;
+  box-shadow: 0 4px 18px rgba(220, 53, 69, 0.15) !important;
+}
+
+.complaint-card.severity-high {
+  border-left: 5px solid #fd7e14 !important;
+  box-shadow: 0 4px 14px rgba(253, 126, 20, 0.1) !important;
+}
+
+.complaint-card.severity-medium {
+  border-left: 5px solid #ffc107 !important;
+}
+
+.complaint-card.severity-low {
+  border-left: 5px solid #20c997 !important;
+}
+
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.severity-badge-urgent {
+  background: #ffe3e3;
+  color: #c92a2a;
+  border: 1px solid #ffa8a8;
+  animation: pulseUrgent 1.8s infinite ease-in-out;
+}
+
+.severity-badge-high {
+  background: #fff4e6;
+  color: #d9480f;
+  border: 1px solid #ffd8a8;
+}
+
+.severity-badge-medium {
+  background: #fff9db;
+  color: #f08c00;
+  border: 1px solid #ffe066;
+}
+
+.severity-badge-low {
+  background: #e6fcf5;
+  color: #0ca678;
+  border: 1px solid #96f2d7;
+}
+
+@keyframes pulseUrgent {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
+}
+
+.severity-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.ai-detected-tag {
+  font-size: 0.7rem;
+  color: #6c757d;
+  background: #f1f3f5;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+}

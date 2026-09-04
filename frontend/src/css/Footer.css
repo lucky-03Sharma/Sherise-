@@ -1,16 +1,19 @@
 .site-footer {
-  background: #a45a8d;
+  background: linear-gradient(135deg, #3d102e 0%, #5c1844 50%, #7a1d56 100%);
   color: #fff;
   text-align: center;
-  padding: 50px 24px 30px;
+  padding: 55px 24px 35px;
   margin-top: auto;
+  border-top: 1px solid rgba(230, 73, 128, 0.25);
+  box-shadow: 0 -10px 30px rgba(61, 16, 46, 0.15);
 }
 
 .site-footer-tagline {
-  margin: 16px 0 28px;
+  margin: 18px 0 28px;
   font-size: 1.05rem;
-  color: #f7eaf2;
+  color: #ffdeeb;
   opacity: 0.95;
+  font-weight: 500;
 }
 
 .site-footer-social {
@@ -24,26 +27,28 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.15rem;
   text-decoration: none;
-  transition: background 0.3s, transform 0.3s;
+  transition: all 0.25s ease;
 }
 
 .social-link:hover {
-  background: #fff;
-  color: #a45a8d;
-  transform: translateY(-3px);
+  background: #ffffff;
+  color: #d63384;
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
 }
 
 .site-footer-copy {
   margin: 0;
-  font-size: 0.9rem;
-  color: #f1d3e0;
+  font-size: 0.88rem;
+  color: #fcc2d7;
   opacity: 0.9;
 }
 

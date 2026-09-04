@@ -14,7 +14,7 @@ const helplineSchema = new mongoose.Schema(
 
     category: {
       type: String,
-      enum: ["police", "legal", "mental", "domestic", "ngo"],
+      enum: ["police", "legal", "mental", "domestic", "ngo", "sherise"],
       required: true,
     },
 

@@ -1,41 +1,75 @@
 .sherise-logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.sherise-logo:hover {
+  transform: translateY(-1px);
 }
 
 .sherise-logo-mark {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #a45a8d, #c77b9d);
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f06595 0%, #d63384 50%, #ae3ec9 100%);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
-  box-shadow: 0 4px 12px rgba(164, 90, 141, 0.35);
+  font-size: 1.25rem;
+  box-shadow: 0 6px 18px rgba(214, 51, 132, 0.4);
   flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.sherise-logo:hover .sherise-logo-mark {
+  box-shadow: 0 8px 24px rgba(214, 51, 132, 0.6);
+  transform: rotate(-5deg) scale(1.05);
+}
+
+.sherise-logo-text-group {
+  display: flex;
+  flex-direction: column;
 }
 
 .sherise-logo-text {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #a45a8d;
+  font-size: 1.65rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #d63384 0%, #ae3ec9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.sherise-logo-tagline {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #c2255c;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: 2px;
 }
 
 .sherise-logo--footer .sherise-logo-mark {
-  width: 48px;
-  height: 48px;
-  font-size: 1.3rem;
+  width: 50px;
+  height: 50px;
+  font-size: 1.4rem;
 }
 
 .sherise-logo--footer .sherise-logo-text {
-  color: #fff;
+  background: linear-gradient(135deg, #ffffff 0%, #ffd6e7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-size: 1.9rem;
+}
+
+.sherise-logo--footer .sherise-logo-tagline {
+  color: #ffdeeb;
 }
 
 .sherise-logo--footer {
