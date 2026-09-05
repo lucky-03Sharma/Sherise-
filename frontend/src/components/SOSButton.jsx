@@ -6,10 +6,28 @@ import {
   faTowerBroadcast,
   faXmark,
   faLocationDot,
-  faBuildingShield,
   faSpinner,
+  faVolumeHigh,
+  faVolumeXmark,
+  faAddressBook,
+  faCheck,
+  faArrowUpRightFromSquare,
+  faRotate,
+  faPlus,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { triggerOneTapSOS } from "../services/sosService";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import {
+  triggerOneTapSOS,
+  getLiveCoordinates,
+  startEmergencySiren,
+  stopEmergencySiren,
+  getStoredEmergencyContacts,
+  saveStoredEmergencyContacts,
+  getWhatsAppEmergencyUrl,
+  getSmsEmergencyUrl,
+} from "../services/sosService";
+import { dialHelpline } from "../services/emergencyService";
 import { useLanguage } from "../contexts/LanguageContext";
 import "../css/sos-button.css";
 
@@ -18,12 +36,44 @@ export default function SOSButton() {
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeStatus, setActiveStatus] = useState("");
-  const [countdown, setCountdown] = useState(null);
-  const countdownIntervalRef = useRef(null);
+  const [coords, setCoords] = useState({
+    latitude: null,
+    longitude: null,
+    accuracy: null,
+    isLive: false,
+  });
+  const [sirenPlaying, setSirenPlaying] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [showContactsManager, setShowContactsManager] = useState(false);
+  const [newContactName, setNewContactName] = useState("");
+  const [newContactPhone, setNewContactPhone] = useState("");
 
-  // Shake detection on mobile (3 rapid shakes triggers SOS)
+  // Load contacts and fetch GPS whenever modal opens
   useEffect(() => {
-    let lastX = 0, lastY = 0, lastZ = 0;
+    if (modalOpen) {
+      setContacts(getStoredEmergencyContacts());
+      fetchLiveGPS();
+    } else {
+      // Stop siren if modal is closed
+      if (sirenPlaying) {
+        stopEmergencySiren();
+        setSirenPlaying(false);
+      }
+    }
+  }, [modalOpen]);
+
+  // Clean up siren on component unmount
+  useEffect(() => {
+    return () => {
+      stopEmergencySiren();
+    };
+  }, []);
+
+  // Shake detection on mobile (4 rapid shakes triggers immediate SOS)
+  useEffect(() => {
+    let lastX = 0,
+      lastY = 0,
+      lastZ = 0;
     let shakeCount = 0;
     let lastTime = 0;
 
@@ -41,10 +91,11 @@ export default function SOSButton() {
             diffTime) *
           10000;
 
-        if (speed > 800) {
+        if (speed > 850) {
           shakeCount += 1;
           if (shakeCount >= 4) {
             shakeCount = 0;
+            setModalOpen(true);
             handleTrigger("support");
           }
         } else if (currentTime - lastTime > 1500) {
@@ -67,54 +118,76 @@ export default function SOSButton() {
     };
   }, []);
 
+  const fetchLiveGPS = async () => {
+    setActiveStatus(t("Locating high-precision GPS coordinates..."));
+    const liveCoords = await getLiveCoordinates(4000);
+    setCoords(liveCoords);
+    if (liveCoords.isLive) {
+      setActiveStatus(t("Live GPS locked."));
+    } else {
+      setActiveStatus(
+        t("GPS unavailable or taking long — emergency dialers are ready.")
+      );
+    }
+  };
+
   const handleTrigger = async (target = "support") => {
     setLoading(true);
-    setActiveStatus(t("Locating nearest responder and sharing live GPS..."));
+    setActiveStatus(t("Dispatching emergency alert & dialer..."));
 
     try {
       const result = await triggerOneTapSOS(target);
-      const responderName = result.responder?.name || "Emergency Services";
+      const responderName = result.responder?.name || "112 National Police";
       setActiveStatus(
-        `${t("Connected to")} ${responderName}! ${t("Live GPS active.")}`
+        `${t("Alert sent! Connecting to")} ${responderName}...`
       );
-      setTimeout(() => {
-        setModalOpen(false);
-        setActiveStatus("");
-      }, 4000);
     } catch (err) {
-      console.error("SOS trigger error:", err);
-      setActiveStatus(
-        err.response?.data?.message ||
-          t("SOS Alert triggered. Opening dialer to 112.")
-      );
-      window.location.href = "tel:112";
+      console.warn("Backend SOS notification fallback:", err.message);
+      setActiveStatus(t("Emergency call opened to 112!"));
+      dialHelpline("112");
     } finally {
       setLoading(false);
-      setCountdown(null);
     }
   };
 
-  const startAutoSOS = (target = "support") => {
-    setCountdown(3);
-    countdownIntervalRef.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdownIntervalRef.current);
-          handleTrigger(target);
-          return null;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+  const toggleSiren = () => {
+    if (sirenPlaying) {
+      stopEmergencySiren();
+      setSirenPlaying(false);
+    } else {
+      startEmergencySiren();
+      setSirenPlaying(true);
+    }
   };
 
-  const cancelCountdown = () => {
-    if (countdownIntervalRef.current) {
-      clearInterval(countdownIntervalRef.current);
-    }
-    setCountdown(null);
-    setActiveStatus("");
+  const handleAddContact = (e) => {
+    e.preventDefault();
+    if (!newContactName.trim() || !newContactPhone.trim()) return;
+
+    const updated = [
+      ...contacts,
+      {
+        id: Date.now().toString(),
+        name: newContactName.trim(),
+        phone: newContactPhone.trim(),
+      },
+    ];
+    setContacts(updated);
+    saveStoredEmergencyContacts(updated);
+    setNewContactName("");
+    setNewContactPhone("");
   };
+
+  const handleDeleteContact = (id) => {
+    const updated = contacts.filter((c) => c.id !== id);
+    setContacts(updated);
+    saveStoredEmergencyContacts(updated);
+  };
+
+  const mapsUrl =
+    coords.latitude && coords.longitude
+      ? `https://maps.google.com/?q=${coords.latitude},${coords.longitude}`
+      : null;
 
   return (
     <>
@@ -122,9 +195,9 @@ export default function SOSButton() {
       <div className="sos-floating-container">
         <button
           type="button"
-          className="sos-main-trigger-btn"
+          className={`sos-main-trigger-btn ${sirenPlaying ? "siren-active" : ""}`}
           onClick={() => setModalOpen(true)}
-          title="Emergency SOS — Connect to Nearest Responder"
+          title="Emergency SOS — Instant Police, Helplines & Live GPS"
           aria-label="Emergency SOS"
         >
           <span className="sos-pulse-ring"></span>
@@ -136,76 +209,124 @@ export default function SOSButton() {
         </button>
       </div>
 
-      {/* SOS Action Modal */}
+      {/* Full-Featured SOS Emergency Modal */}
       {modalOpen && (
-        <div className="sos-modal-backdrop" onClick={() => !loading && setModalOpen(false)}>
-          <div className="sos-modal-card" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="sos-modal-backdrop"
+          onClick={() => !loading && setModalOpen(false)}
+        >
+          <div
+            className="sos-modal-card"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+          >
+            {/* Modal Header */}
             <div className="sos-modal-header">
               <div className="sos-modal-title-group">
                 <span className="sos-badge-urgent">
-                  <FontAwesomeIcon icon={faLocationDot} /> LIVE GPS ACTIVE
+                  <span className="urgent-dot"></span> EMERGENCY RESPONSE
                 </span>
-                <h3>{t("Emergency SOS Support")}</h3>
+                <h3>{t("Instant SOS & Safety Broadcast")}</h3>
                 <p className="sos-subtitle">
-                  {t("Connects instantly to nearest police station, SheRise member, or helpline.")}
+                  {t(
+                    "One tap connects directly to national emergency lines and shares your live GPS with trusted contacts."
+                  )}
                 </p>
               </div>
               <button
                 type="button"
                 className="sos-close-btn"
-                onClick={() => {
-                  cancelCountdown();
-                  setModalOpen(false);
-                }}
+                onClick={() => setModalOpen(false)}
                 disabled={loading}
+                aria-label="Close"
               >
                 <FontAwesomeIcon icon={faXmark} />
               </button>
             </div>
 
-            {countdown !== null ? (
-              <div className="sos-countdown-banner">
-                <div className="sos-countdown-circle">{countdown}</div>
-                <div>
-                  <h5>{t("Calling Nearest Responder...")}</h5>
-                  <p>{t("Sharing your exact live location.")}</p>
+            {/* Live GPS Coordinates Card */}
+            <div className="sos-gps-card">
+              <div className="sos-gps-info">
+                <FontAwesomeIcon
+                  icon={faLocationDot}
+                  className={`gps-icon ${coords.isLive ? "live" : "pending"}`}
+                />
+                <div className="gps-details">
+                  <div className="gps-status-row">
+                    <span className="gps-label">
+                      {coords.isLive
+                        ? t("Live GPS Locked")
+                        : t("Acquiring GPS...")}
+                    </span>
+                    {coords.accuracy && (
+                      <span className="gps-accuracy">
+                        ±{coords.accuracy}m precision
+                      </span>
+                    )}
+                  </div>
+                  <div className="gps-coords-text">
+                    {coords.isLive
+                      ? `${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}`
+                      : t("Waiting for satellite signal...")}
+                  </div>
                 </div>
+              </div>
+
+              <div className="gps-actions">
+                {mapsUrl && (
+                  <a
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-gps-map"
+                    title="Open in Google Maps"
+                  >
+                    <span>{t("Map")}</span>
+                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                  </a>
+                )}
                 <button
                   type="button"
-                  className="btn btn-outline-light btn-sm"
-                  onClick={cancelCountdown}
+                  className="btn-gps-refresh"
+                  onClick={fetchLiveGPS}
+                  title="Refresh GPS"
                 >
-                  {t("Cancel")}
+                  <FontAwesomeIcon icon={faRotate} />
                 </button>
               </div>
-            ) : (
-              activeStatus && (
-                <div className="sos-status-alert">
-                  <FontAwesomeIcon icon={faSpinner} spin={loading} />
-                  <span>{activeStatus}</span>
-                </div>
-              )
+            </div>
+
+            {/* Status Alert Banner */}
+            {activeStatus && (
+              <div className="sos-status-alert">
+                <FontAwesomeIcon icon={faSpinner} spin={loading} />
+                <span>{activeStatus}</span>
+              </div>
             )}
 
+            {/* Priority Emergency Call Cards */}
             <div className="sos-actions-list">
-              {/* Option 1: Nearest Any Responder */}
+              {/* Option 1: National Emergency Police 112 */}
               <button
                 type="button"
                 className="sos-action-card sos-primary-action"
-                onClick={() => handleTrigger("support")}
+                onClick={() => handleTrigger("police")}
                 disabled={loading}
               >
                 <div className="sos-action-icon bg-red">
                   <FontAwesomeIcon icon={faPhoneVolume} />
                 </div>
                 <div className="sos-action-info">
-                  <h4>{t("Connect Nearest Support (Auto-Detect)")}</h4>
-                  <p>{t("Auto-connects to closest Police, SheRise member or 112 with GPS")}</p>
+                  <div className="sos-action-headline">
+                    <h4>{t("National Police (112)")}</h4>
+                    <span className="sos-badge-tag">{t("Instant 24/7")}</span>
+                  </div>
+                  <p>{t("Direct emergency police response with live GPS transmission")}</p>
                 </div>
-                <span className="sos-instant-badge">{t("Recommended")}</span>
               </button>
 
-              {/* Option 2: Nearest Police */}
+              {/* Option 2: Women Police Cell 1091 */}
               <button
                 type="button"
                 className="sos-action-card"
@@ -213,15 +334,17 @@ export default function SOSButton() {
                 disabled={loading}
               >
                 <div className="sos-action-icon bg-blue">
-                  <FontAwesomeIcon icon={faBuildingShield} />
+                  <FontAwesomeIcon icon={faShieldHeart} />
                 </div>
                 <div className="sos-action-info">
-                  <h4>{t("Nearest Police Station")}</h4>
-                  <p>{t("Immediate dispatch with live GPS coordinate sharing")}</p>
+                  <div className="sos-action-headline">
+                    <h4>{t("Women Police Helpline (1091)")}</h4>
+                  </div>
+                  <p>{t("Dedicated state police helpline for women in distress")}</p>
                 </div>
               </button>
 
-              {/* Option 3: Nearest SheRise Member */}
+              {/* Option 3: SheRise & Women Commission 181 */}
               <button
                 type="button"
                 className="sos-action-card"
@@ -229,19 +352,152 @@ export default function SOSButton() {
                 disabled={loading}
               >
                 <div className="sos-action-icon bg-purple">
-                  <FontAwesomeIcon icon={faShieldHeart} />
+                  <FontAwesomeIcon icon={faTowerBroadcast} />
                 </div>
                 <div className="sos-action-info">
-                  <h4>{t("Nearest SheRise Member")}</h4>
-                  <p>{t("Contact local verified SheRise community support network")}</p>
+                  <div className="sos-action-headline">
+                    <h4>{t("Women in Distress Support (181)")}</h4>
+                  </div>
+                  <p>{t("Immediate domestic crisis and legal shelter assistance")}</p>
                 </div>
               </button>
             </div>
 
-            <div className="sos-modal-footer">
-              <small>
-                💡 <strong>Tip:</strong> You can also shake your phone rapidly 4 times to trigger SOS without opening the menu.
-              </small>
+            {/* Dual Deterrence & Broadcast Grid */}
+            <div className="sos-secondary-grid">
+              {/* WhatsApp Broadcast */}
+              <a
+                href={getWhatsAppEmergencyUrl("", coords)}
+                target="_blank"
+                rel="noreferrer"
+                className="sos-tool-btn btn-whatsapp"
+              >
+                <FontAwesomeIcon icon={faWhatsapp} className="tool-btn-icon" />
+                <div>
+                  <strong>{t("WhatsApp Live SOS")}</strong>
+                  <small>{t("Share live location link in 1 tap")}</small>
+                </div>
+              </a>
+
+              {/* Audible Deterrent Siren */}
+              <button
+                type="button"
+                className={`sos-tool-btn btn-siren ${
+                  sirenPlaying ? "siren-active" : ""
+                }`}
+                onClick={toggleSiren}
+              >
+                <FontAwesomeIcon
+                  icon={sirenPlaying ? faVolumeXmark : faVolumeHigh}
+                  className="tool-btn-icon"
+                />
+                <div>
+                  <strong>
+                    {sirenPlaying ? t("Stop Siren") : t("Sound Piercing Siren")}
+                  </strong>
+                  <small>
+                    {sirenPlaying
+                      ? t("Loud alarm sounding...")
+                      : t("Deter attacker & alert bystanders")}
+                  </small>
+                </div>
+              </button>
+            </div>
+
+            {/* Trusted Personal Emergency Contacts Section */}
+            <div className="sos-contacts-section">
+              <div className="contacts-header-row">
+                <button
+                  type="button"
+                  className="btn-toggle-contacts"
+                  onClick={() => setShowContactsManager(!showContactsManager)}
+                >
+                  <FontAwesomeIcon icon={faAddressBook} />
+                  <span>
+                    {t("Trusted Emergency Contacts")} ({contacts.length})
+                  </span>
+                </button>
+                <small className="contacts-hint">
+                  {t("Saved privately on your device")}
+                </small>
+              </div>
+
+              {showContactsManager && (
+                <div className="contacts-manager-drawer">
+                  {contacts.length > 0 ? (
+                    <div className="contacts-list">
+                      {contacts.map((contact) => (
+                        <div key={contact.id} className="contact-item">
+                          <div className="contact-meta">
+                            <strong>{contact.name}</strong>
+                            <span>{contact.phone || t("No phone saved")}</span>
+                          </div>
+
+                          <div className="contact-actions">
+                            {contact.phone && (
+                              <>
+                                <a
+                                  href={`tel:${contact.phone}`}
+                                  className="btn-contact-action btn-call"
+                                  title={`Call ${contact.name}`}
+                                >
+                                  <FontAwesomeIcon icon={faPhoneVolume} />
+                                </a>
+                                <a
+                                  href={getWhatsAppEmergencyUrl(
+                                    contact.phone,
+                                    coords
+                                  )}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="btn-contact-action btn-wa"
+                                  title={`WhatsApp SOS to ${contact.name}`}
+                                >
+                                  <FontAwesomeIcon icon={faWhatsapp} />
+                                </a>
+                              </>
+                            )}
+                            <button
+                              type="button"
+                              className="btn-contact-action btn-del"
+                              onClick={() => handleDeleteContact(contact.id)}
+                              title="Delete Contact"
+                            >
+                              <FontAwesomeIcon icon={faTrash} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="no-contacts-text">
+                      {t("No emergency contacts added yet.")}
+                    </p>
+                  )}
+
+                  {/* Add Contact Mini Form */}
+                  <form onSubmit={handleAddContact} className="add-contact-form">
+                    <input
+                      type="text"
+                      placeholder={t("Name (e.g. Mom, Sister)")}
+                      value={newContactName}
+                      onChange={(e) => setNewContactName(e.target.value)}
+                      className="contact-input"
+                    />
+                    <input
+                      type="tel"
+                      placeholder={t("Phone number")}
+                      value={newContactPhone}
+                      onChange={(e) => setNewContactPhone(e.target.value)}
+                      className="contact-input"
+                    />
+                    <button type="submit" className="btn-add-contact">
+                      <FontAwesomeIcon icon={faPlus} />
+                      <span>{t("Add")}</span>
+                    </button>
+                  </form>
+                </div>
+              )}
             </div>
           </div>
         </div>

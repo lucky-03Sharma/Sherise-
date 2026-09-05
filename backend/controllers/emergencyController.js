@@ -98,11 +98,12 @@ exports.startEmergencyCall = async (req, res) => {
 
     const lat = Number(latitude);
     const lng = Number(longitude);
-    const user = await User.findById(req.user.id);
+    const user = req.user?.id ? await User.findById(req.user.id) : null;
 
     const alert = await EmergencyAlert.create({
-      userId: req.user.id,
-      userName: user?.name,
+      userId: req.user?.id || null,
+      isGuest: !req.user,
+      userName: user?.name || "Emergency Caller",
       helplineId: helplineId || undefined,
       helplineName,
       helplinePhone,
@@ -142,7 +143,11 @@ exports.updateLiveLocation = async (req, res) => {
       return res.status(404).json({ message: "Emergency alert not found" });
     }
 
-    if (alert.userId.toString() !== req.user.id) {
+    const isOwner =
+      alert.isGuest ||
+      (alert.userId && req.user?.id && alert.userId.toString() === req.user.id);
+
+    if (!isOwner) {
       return res.status(403).json({ message: "Unauthorized" });
     }
 
@@ -184,7 +189,11 @@ exports.endEmergencyCall = async (req, res) => {
       return res.status(404).json({ message: "Emergency alert not found" });
     }
 
-    if (alert.userId.toString() !== req.user.id) {
+    const isOwner =
+      alert.isGuest ||
+      (alert.userId && req.user?.id && alert.userId.toString() === req.user.id);
+
+    if (!isOwner) {
       return res.status(403).json({ message: "Unauthorized" });
     }
 
@@ -262,11 +271,12 @@ exports.triggerVoiceHelp = async (req, res) => {
 
     const lat = Number(latitude);
     const lng = Number(longitude);
-    const user = await User.findById(req.user.id);
+    const user = req.user?.id ? await User.findById(req.user.id) : null;
 
     const alert = await EmergencyAlert.create({
-      userId: req.user.id,
-      userName: user?.name,
+      userId: req.user?.id || null,
+      isGuest: !req.user,
+      userName: user?.name || "Voice Emergency Caller",
       helplineId: nearestPolice._id,
       helplineName: nearestPolice.name,
       helplinePhone: nearestPolice.phone,
@@ -313,11 +323,12 @@ exports.triggerSOS = async (req, res) => {
 
     const lat = latitude !== undefined ? Number(latitude) : 0;
     const lng = longitude !== undefined ? Number(longitude) : 0;
-    const user = await User.findById(req.user.id);
+    const user = req.user?.id ? await User.findById(req.user.id) : null;
 
     const alert = await EmergencyAlert.create({
-      userId: req.user.id,
-      userName: user?.name,
+      userId: req.user?.id || null,
+      isGuest: !req.user,
+      userName: user?.name || "SOS Emergency Caller",
       helplineId: nearestResponder._id || undefined,
       helplineName: nearestResponder.name,
       helplinePhone: nearestResponder.phone,

@@ -18,7 +18,12 @@ const emergencyAlertSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
+      default: null,
+    },
+    isGuest: {
+      type: Boolean,
+      default: false,
     },
     userName: String,
     helplineId: {

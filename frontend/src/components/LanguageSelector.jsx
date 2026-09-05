@@ -27,7 +27,7 @@ export default function LanguageSelector() {
         type="button"
         className={`lang-btn ${open ? "active" : ""}`}
         onClick={() => setOpen(!open)}
-        title="Change Language (Sarvam AI Multilingual)"
+        title="Select Language"
         aria-label="Change Language"
       >
         <FontAwesomeIcon icon={isTranslating ? faSpinner : faGlobe} spin={isTranslating} className="globe-icon" />
@@ -38,7 +38,7 @@ export default function LanguageSelector() {
         <div className="lang-dropdown-menu">
           <div className="lang-dropdown-header">
             <span>Select Language</span>
-            <small className="sarvam-badge">Powered by Sarvam AI</small>
+            <span className="lang-count-badge">Multilingual</span>
           </div>
           <div className="lang-options-grid">
             {supportedLanguages.map((l) => {

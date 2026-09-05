@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const protect = require("../middlewares/authMiddleware");
+const { protect, optionalAuth } = require("../middlewares/authMiddleware");
 const {
   startEmergencyCall,
   updateLiveLocation,
@@ -12,13 +12,16 @@ const {
   triggerSOS,
 } = require("../controllers/emergencyController");
 
-router.post("/call", protect, startEmergencyCall);
-router.post("/voice-help", protect, triggerVoiceHelp);
-router.post("/sos", protect, triggerSOS);
-router.put("/:id/location", protect, updateLiveLocation);
-router.put("/:id/end", protect, endEmergencyCall);
+// Public / Guest-enabled Emergency Actions (Never block emergency requests!)
+router.post("/call", optionalAuth, startEmergencyCall);
+router.post("/voice-help", optionalAuth, triggerVoiceHelp);
+router.post("/sos", optionalAuth, triggerSOS);
+router.put("/:id/location", optionalAuth, updateLiveLocation);
+router.put("/:id/end", optionalAuth, endEmergencyCall);
+router.get("/nearest-police", optionalAuth, getNearestPoliceHelpline);
+
+// User-authenticated emergency history & admin active alerts
 router.get("/my", protect, getMyEmergencyAlerts);
 router.get("/active", protect, getActiveEmergencyAlerts);
-router.get("/nearest-police", protect, getNearestPoliceHelpline);
 
 module.exports = router;

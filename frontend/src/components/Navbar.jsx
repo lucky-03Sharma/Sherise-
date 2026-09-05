@@ -94,7 +94,7 @@ export default function Navbar() {
             <span className="sos-pill-label">112 SOS</span>
           </a>
 
-          {/* Sarvam AI Multilingual Selector */}
+          {/* Multilingual Language Selector */}
           <LanguageSelector />
 
           {/* Auth State Links */}

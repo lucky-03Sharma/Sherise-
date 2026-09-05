@@ -1,4 +1,6 @@
-/* Floating SOS Button and Emergency Modal */
+/* ========================================================
+   SheRise Floating SOS Button & High-Urgency Emergency Modal
+   ======================================================== */
 
 .sos-floating-container {
   position: fixed;
@@ -9,14 +11,14 @@
 
 .sos-main-trigger-btn {
   position: relative;
-  width: 68px;
-  height: 68px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #e03131, #c92a2a);
+  background: linear-gradient(135deg, #e03131 0%, #c92a2a 100%);
   border: none;
   color: white;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(224, 49, 49, 0.45);
+  box-shadow: 0 8px 26px rgba(224, 49, 49, 0.48);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,8 +26,23 @@
 }
 
 .sos-main-trigger-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 10px 28px rgba(224, 49, 49, 0.6);
+  transform: scale(1.08);
+  box-shadow: 0 10px 32px rgba(224, 49, 49, 0.65);
+}
+
+.sos-main-trigger-btn.siren-active {
+  animation: sirenFlash 0.5s infinite alternate;
+}
+
+@keyframes sirenFlash {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.5);
+    transform: scale(1.06);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(255, 230, 0, 0.9), 0 0 60px rgba(255, 50, 50, 0.7);
+    transform: scale(1.12);
+  }
 }
 
 .sos-btn-content {
@@ -38,11 +55,11 @@
 }
 
 .sos-tower-icon {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
 }
 
 .sos-text {
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   font-weight: 900;
   letter-spacing: 1px;
 }
@@ -86,35 +103,42 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(18, 18, 18, 0.75);
-  backdrop-filter: blur(6px);
+  background: rgba(15, 15, 18, 0.82);
+  backdrop-filter: blur(8px);
   z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  animation: fadeIn 0.2s ease-out;
+  animation: sosFadeIn 0.2s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes sosFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .sos-modal-card {
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
   background: #ffffff;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
   border: 2px solid #ffa8a8;
-  animation: slideUp 0.25s ease-out;
+  animation: sosSlideUp 0.25s ease-out;
+  display: flex;
+  flex-direction: column;
 }
 
-@keyframes slideUp {
+@keyframes sosSlideUp {
   from {
-    transform: translateY(20px);
+    transform: translateY(24px);
     opacity: 0;
   }
   to {
@@ -123,11 +147,12 @@
   }
 }
 
+/* Modal Header */
 .sos-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 24px 24px 16px;
+  padding: 22px 24px 16px;
   border-bottom: 1px solid #f1f3f5;
 }
 
@@ -142,20 +167,38 @@
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.5px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+}
+
+.urgent-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e03131;
+  animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .sos-modal-title-group h3 {
   margin: 0;
   font-size: 1.35rem;
   font-weight: 800;
-  color: #212529;
+  color: #1a1e21;
 }
 
 .sos-subtitle {
   margin: 4px 0 0;
-  font-size: 0.85rem;
-  color: #868e96;
+  font-size: 0.83rem;
+  color: #6c757d;
+  line-height: 1.4;
 }
 
 .sos-close-btn {
@@ -169,53 +212,154 @@
   justify-content: center;
   cursor: pointer;
   color: #495057;
+  font-size: 0.95rem;
   transition: all 0.15s ease;
 }
 
 .sos-close-btn:hover {
   background: #e9ecef;
+  color: #212529;
 }
 
-/* Status & Countdown */
+/* Live GPS Card */
+.sos-gps-card {
+  margin: 14px 20px 0;
+  background: #f8f9fa;
+  border: 1.5px solid #e9ecef;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sos-gps-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gps-icon {
+  font-size: 1.4rem;
+}
+
+.gps-icon.live {
+  color: #2f9e44;
+  animation: gpsPulse 2s infinite;
+}
+
+.gps-icon.pending {
+  color: #f59f00;
+}
+
+@keyframes gpsPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.gps-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gps-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gps-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+.gps-accuracy {
+  font-size: 0.72rem;
+  color: #2b8a3e;
+  background: #ebfbee;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.gps-coords-text {
+  font-size: 0.78rem;
+  color: #6c757d;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.gps-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-gps-map {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e7f5ff;
+  color: #1971c2;
+  border: 1px solid #a5d8ff;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-gps-map:hover {
+  background: #d0ebff;
+  color: #1864ab;
+}
+
+.btn-gps-refresh {
+  background: transparent;
+  border: 1px solid #ced4da;
+  color: #495057;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.15s ease;
+}
+
+.btn-gps-refresh:hover {
+  background: #e9ecef;
+}
+
+/* Status Alert */
 .sos-status-alert {
+  margin: 10px 20px 0;
   display: flex;
   align-items: center;
   gap: 10px;
   background: #e7f5ff;
   color: #1864ab;
-  padding: 12px 20px;
-  font-size: 0.9rem;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
-.sos-countdown-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #c92a2a;
-  color: white;
-  padding: 14px 20px;
-}
-
-.sos-countdown-circle {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: white;
-  color: #c92a2a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  font-weight: 900;
-}
-
-/* Actions List */
+/* Action List */
 .sos-actions-list {
-  padding: 16px 20px;
+  padding: 14px 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .sos-action-card {
@@ -270,11 +414,17 @@
 }
 
 .sos-action-icon.bg-purple {
-  background: linear-gradient(135deg, #a45a8d, #862e9c);
+  background: linear-gradient(135deg, #d63384, #ae3ec9);
 }
 
 .sos-action-info {
   flex-grow: 1;
+}
+
+.sos-action-headline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .sos-action-info h4 {
@@ -284,27 +434,288 @@
   color: #212529;
 }
 
-.sos-action-info p {
-  margin: 3px 0 0;
-  font-size: 0.78rem;
-  color: #868e96;
-}
-
-.sos-instant-badge {
+.sos-badge-tag {
   font-size: 0.68rem;
   background: #c92a2a;
   color: white;
   padding: 2px 7px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-weight: 700;
-  text-transform: uppercase;
 }
 
-.sos-modal-footer {
-  padding: 12px 20px;
-  background: #f8f9fa;
-  border-top: 1px solid #f1f3f5;
+.sos-action-info p {
+  margin: 3px 0 0;
   font-size: 0.78rem;
   color: #6c757d;
-  text-align: center;
+}
+
+/* Secondary Broadcast & Deterrent Tools */
+.sos-secondary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 20px 14px;
+}
+
+.sos-tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.sos-tool-btn strong {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.sos-tool-btn small {
+  display: block;
+  font-size: 0.72rem;
+  opacity: 0.85;
+  line-height: 1.25;
+  margin-top: 2px;
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.btn-whatsapp:hover {
+  background: #1ebc59;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+
+.btn-siren {
+  background: #fff0f6;
+  color: #c2255c;
+  border: 1.5px solid #fcc2d7;
+}
+
+.btn-siren:hover {
+  background: #ffe3ec;
+  border-color: #f783ac;
+  transform: translateY(-2px);
+}
+
+.btn-siren.siren-active {
+  background: #e03131;
+  color: #ffffff;
+  border-color: #c92a2a;
+  animation: sirenButtonPulse 0.4s infinite alternate;
+}
+
+@keyframes sirenButtonPulse {
+  0% {
+    background: #e03131;
+    transform: scale(1);
+  }
+  100% {
+    background: #c92a2a;
+    transform: scale(1.03);
+    box-shadow: 0 0 16px rgba(224, 49, 49, 0.7);
+  }
+}
+
+.tool-btn-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+/* Contacts Section */
+.sos-contacts-section {
+  padding: 14px 20px 20px;
+  border-top: 1px solid #f1f3f5;
+  background: #fdfafd;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.contacts-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-toggle-contacts {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #d63384;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.btn-toggle-contacts:hover {
+  color: #ae3ec9;
+}
+
+.contacts-hint {
+  font-size: 0.75rem;
+  color: #868e96;
+}
+
+.contacts-manager-drawer {
+  margin-top: 12px;
+  animation: drawerSlide 0.2s ease-out;
+}
+
+@keyframes drawerSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contacts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.contact-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-meta strong {
+  font-size: 0.85rem;
+  color: #212529;
+}
+
+.contact-meta span {
+  font-size: 0.75rem;
+  color: #6c757d;
+}
+
+.contact-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-contact-action {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-contact-action.btn-call {
+  background: #e7f5ff;
+  color: #1971c2;
+}
+
+.btn-contact-action.btn-call:hover {
+  background: #d0ebff;
+}
+
+.btn-contact-action.btn-wa {
+  background: #ebfbee;
+  color: #2f9e44;
+}
+
+.btn-contact-action.btn-wa:hover {
+  background: #d3f9d8;
+}
+
+.btn-contact-action.btn-del {
+  background: #fff5f5;
+  color: #e03131;
+}
+
+.btn-contact-action.btn-del:hover {
+  background: #ffe3e3;
+}
+
+.no-contacts-text {
+  font-size: 0.82rem;
+  color: #868e96;
+  margin: 8px 0;
+}
+
+/* Add Contact Mini Form */
+.add-contact-form {
+  display: flex;
+  gap: 6px;
+}
+
+.contact-input {
+  flex: 1;
+  height: 36px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.contact-input:focus {
+  border-color: #d63384;
+}
+
+.btn-add-contact {
+  height: 36px;
+  padding: 0 14px;
+  background: #d63384;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.15s ease;
+}
+
+.btn-add-contact:hover {
+  background: #c2255c;
+}
+
+@media (max-width: 480px) {
+  .sos-secondary-grid {
+    grid-template-columns: 1fr;
+  }
+  .sos-modal-card {
+    border-radius: 18px;
+  }
 }

@@ -73,13 +73,15 @@
   color: #343a40;
 }
 
-.sarvam-badge {
-  font-size: 0.68rem;
-  color: #7048e8;
-  background: #f3f0ff;
-  padding: 2px 6px;
-  border-radius: 6px;
+.lang-count-badge {
+  font-size: 0.72rem;
+  color: #c2255c;
+  background: #fdf2f8;
+  border: 1px solid rgba(230, 73, 128, 0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
   font-weight: 600;
+  letter-spacing: 0.2px;
 }
 
 .lang-options-grid {

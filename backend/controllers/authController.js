@@ -26,14 +26,21 @@ exports.registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        await User.create({
+        const newUser = await User.create({
             name,
             email,
             password: hashedPassword,
         });
 
+        const token = process.env.JWT_SECRET
+            ? jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "7d" })
+            : null;
+
         res.status(201).json({
             message: "User registered successfully",
+            token,
+            name: newUser.name,
+            email: newUser.email,
         });
     } catch (error) {
         if (error.code === 11000) {

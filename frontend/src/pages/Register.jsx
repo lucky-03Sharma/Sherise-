@@ -1,34 +1,46 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faEnvelope,
+  faLock,
+  faEye,
+  faEyeSlash,
+  faSpinner,
+  faCircleExclamation,
+  faCircleCheck,
+  faShieldHeart,
+  faXmark,
+  faCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import API from "../services/api";
 import getApiErrorMessage from "../utils/getApiErrorMessage";
-import "../css/Register.css";
 import Navbar from "../components/Navbar";
-import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
+import "../css/Register.css";
 
 export default function Register() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (showPopup) {
-      const timer = setTimeout(() => {
-        setShowPopup(false);
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [showPopup]);
+  const passwordsMatch =
+    form.confirmPassword.length > 0 && form.password === form.confirmPassword;
+  const passwordsMismatch =
+    form.confirmPassword.length > 0 && form.password !== form.confirmPassword;
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -36,37 +48,65 @@ export default function Register() {
     const name = form.name.trim();
     const email = form.email.trim().toLowerCase();
     const password = form.password;
+    const confirmPassword = form.confirmPassword;
 
     if (!name || !email || !password) {
-      setMessage("Please fill in all fields.");
-      setShowPopup(true);
+      setMessage("Please fill in all required fields.");
+      setIsSuccess(false);
       return;
     }
 
     if (password.length < 6) {
-      setMessage("Password must be at least 6 characters.");
-      setShowPopup(true);
+      setMessage("Password must be at least 6 characters long.");
+      setIsSuccess(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setMessage("Passwords do not match. Please verify and try again.");
+      setIsSuccess(false);
       return;
     }
 
     setLoading(true);
+    setMessage("");
 
     try {
-      await API.post("/auth/register", { name, email, password });
+      const res = await API.post("/auth/register", { name, email, password });
 
-      setMessage("Registration successful!");
-      setShowPopup(true);
+      setIsSuccess(true);
+      setMessage("Account created successfully!");
 
-      setTimeout(() => {
-        navigate("/login", { state: { message: "Registration successful. Please log in." } });
-      }, 500);
+      // If backend returned token, auto-login directly!
+      if (res.data?.token) {
+        localStorage.setItem("token", res.data.token);
+        if (res.data.name || name) {
+          localStorage.setItem("name", res.data.name || name);
+        }
+        if (res.data.email || email) {
+          localStorage.setItem("email", res.data.email || email);
+        }
+
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 600);
+      } else {
+        // Fallback: redirect to login with pre-filled email
+        setTimeout(() => {
+          navigate("/login", {
+            state: {
+              email,
+              message: "Account created successfully! Please sign in.",
+            },
+          });
+        }, 1000);
+      }
     } catch (err) {
       console.error("Register error:", err);
-
+      setIsSuccess(false);
       setMessage(
         getApiErrorMessage(err, "Registration failed. Please try again.")
       );
-      setShowPopup(true);
     } finally {
       setLoading(false);
     }
@@ -76,74 +116,206 @@ export default function Register() {
     <>
       <Navbar />
 
-      <div className="register-page">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-md-5">
-              <div className="card shadow-lg register-card">
-                <div className="card-body">
-                  <h2 className="text-center mb-4">{t("Register")}</h2>
+      <div className="auth-page">
+        <div className="auth-container">
+          <div className="auth-card">
+            {/* Header / Brand */}
+            <div className="auth-header">
+              <div className="auth-icon-badge">
+                <FontAwesomeIcon icon={faShieldHeart} />
+              </div>
+              <h1 className="auth-title">{t("Create Your Account")}</h1>
+              <p className="auth-subtitle">
+                {t("Join SheRise for confidential support, therapy, and emergency safety")}
+              </p>
+            </div>
 
-                  <form onSubmit={handleRegister}>
-                    <input
-                      className="form-control mb-3"
-                      placeholder={t("Name")}
-                      value={form.name}
-                      disabled={loading}
-                      onChange={(e) =>
-                        setForm({ ...form, name: e.target.value })
-                      }
-                    />
+            {/* Segmented Mode Switcher */}
+            <div className="auth-tabs">
+              <Link to="/login" className="auth-tab" aria-selected="false">
+                {t("Sign In")}
+              </Link>
+              <button
+                type="button"
+                className="auth-tab active"
+                aria-selected="true"
+              >
+                {t("Create Account")}
+              </button>
+            </div>
 
-                    <input
-                      className="form-control mb-3"
-                      type="email"
-                      placeholder={t("Email")}
-                      value={form.email}
-                      disabled={loading}
-                      onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                      }
-                    />
+            {/* Alert Message */}
+            {message && (
+              <div
+                className={`auth-alert ${
+                  isSuccess ? "auth-alert-success" : "auth-alert-error"
+                }`}
+              >
+                <div className="auth-alert-content">
+                  <FontAwesomeIcon
+                    icon={isSuccess ? faCircleCheck : faCircleExclamation}
+                    className="auth-alert-icon"
+                  />
+                  <span>{message}</span>
+                </div>
+                <button
+                  type="button"
+                  className="auth-alert-dismiss"
+                  onClick={() => setMessage("")}
+                  aria-label="Dismiss alert"
+                >
+                  <FontAwesomeIcon icon={faXmark} />
+                </button>
+              </div>
+            )}
 
-                    <input
-                      className="form-control mb-3"
-                      type="password"
-                      placeholder={t("Password")}
-                      value={form.password}
-                      disabled={loading}
-                      onChange={(e) =>
-                        setForm({ ...form, password: e.target.value })
-                      }
-                    />
-
-                    <button
-                      type="submit"
-                      className="btn btn-primary w-100"
-                      disabled={loading}
-                    >
-                      {loading ? t("Registering...") : t("Register")}
-                    </button>
-                  </form>
-
-                  {showPopup && (
-                    <div
-                      className={`alert mt-3 ${
-                        message.includes("successful")
-                          ? "alert-success"
-                          : "alert-danger"
-                      }`}
-                    >
-                      {message}
-                    </div>
-                  )}
-
-                  <p className="text-center mt-3">
-                    {t("Already have an account?")}{" "}
-                    <Link to="/login">{t("Login here")}</Link>
-                  </p>
+            {/* Register Form */}
+            <form onSubmit={handleRegister} className="auth-form" noValidate>
+              <div className="form-group">
+                <label htmlFor="reg-name">{t("Full Name")}</label>
+                <div className="input-wrapper">
+                  <FontAwesomeIcon icon={faUser} className="input-icon" />
+                  <input
+                    id="reg-name"
+                    type="text"
+                    className="auth-input"
+                    placeholder={t("Your name or preferred alias")}
+                    value={form.name}
+                    disabled={loading}
+                    autoComplete="name"
+                    onChange={(e) =>
+                      setForm({ ...form, name: e.target.value })
+                    }
+                  />
                 </div>
               </div>
+
+              <div className="form-group">
+                <label htmlFor="reg-email">{t("Email Address")}</label>
+                <div className="input-wrapper">
+                  <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
+                  <input
+                    id="reg-email"
+                    type="email"
+                    className="auth-input"
+                    placeholder="name@example.com"
+                    value={form.email}
+                    disabled={loading}
+                    autoComplete="email"
+                    onChange={(e) =>
+                      setForm({ ...form, email: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="form-label-row">
+                  <label htmlFor="reg-password">{t("Password")}</label>
+                  <span className="field-hint">Min. 6 characters</span>
+                </div>
+                <div className="input-wrapper">
+                  <FontAwesomeIcon icon={faLock} className="input-icon" />
+                  <input
+                    id="reg-password"
+                    type={showPassword ? "text" : "password"}
+                    className="auth-input"
+                    placeholder={t("Create a secure password")}
+                    value={form.password}
+                    disabled={loading}
+                    autoComplete="new-password"
+                    onChange={(e) =>
+                      setForm({ ...form, password: e.target.value })
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex="-1"
+                    title={showPassword ? "Hide password" : "Show password"}
+                  >
+                    <FontAwesomeIcon
+                      icon={showPassword ? faEyeSlash : faEye}
+                    />
+                  </button>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="form-label-row">
+                  <label htmlFor="reg-confirm-password">
+                    {t("Confirm Password")}
+                  </label>
+                  {passwordsMatch && (
+                    <span className="match-status match-success">
+                      <FontAwesomeIcon icon={faCheck} /> Passwords match
+                    </span>
+                  )}
+                  {passwordsMismatch && (
+                    <span className="match-status match-error">
+                      Passwords do not match
+                    </span>
+                  )}
+                </div>
+                <div className="input-wrapper">
+                  <FontAwesomeIcon icon={faLock} className="input-icon" />
+                  <input
+                    id="reg-confirm-password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    className={`auth-input ${
+                      passwordsMismatch ? "input-border-error" : ""
+                    } ${passwordsMatch ? "input-border-success" : ""}`}
+                    placeholder={t("Re-enter your password")}
+                    value={form.confirmPassword}
+                    disabled={loading}
+                    autoComplete="new-password"
+                    onChange={(e) =>
+                      setForm({ ...form, confirmPassword: e.target.value })
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
+                    tabIndex="-1"
+                    title={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    <FontAwesomeIcon
+                      icon={showConfirmPassword ? faEyeSlash : faEye}
+                    />
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="auth-submit-btn"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <FontAwesomeIcon icon={faSpinner} spin className="btn-spinner" />
+                    <span>{t("Creating Account...")}</span>
+                  </>
+                ) : (
+                  <span>{t("Create Account")}</span>
+                )}
+              </button>
+            </form>
+
+            {/* Footer */}
+            <div className="auth-footer">
+              <p>
+                {t("Already have an account?")}{" "}
+                <Link to="/login" className="auth-link-bold">
+                  {t("Sign in here")}
+                </Link>
+              </p>
             </div>
           </div>
         </div>
