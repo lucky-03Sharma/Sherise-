@@ -1,7 +1,18 @@
 import axios from "axios";
 
+// Use environment variable if provided; in production default to Render backend URL
+const getBaseURL = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  if (import.meta.env.PROD) {
+    return "https://sherise-backend.onrender.com/api";
+  }
+  return "/api";
+};
+
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api",
+  baseURL: getBaseURL(),
   timeout: 25000,
 });
 

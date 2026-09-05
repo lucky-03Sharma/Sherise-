@@ -19,11 +19,18 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "https://sherise-woad.vercel.app",
-    ],
+    origin: (origin, callback) => {
+      // allow requests with no origin (like mobile apps, curl)
+      if (!origin) return callback(null, true);
+      if (
+        origin.endsWith(".vercel.app") ||
+        origin.includes("localhost") ||
+        origin.includes("127.0.0.1")
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
