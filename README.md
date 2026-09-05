@@ -7,3 +7,5 @@ Project structure:
 
 Keep backend runtime files (`.env`, `package.json`, `package-lock.json`, `node_modules`) inside `backend/`.
 Keep frontend runtime files (`package.json`, `package-lock.json`, `node_modules`) inside `frontend/`.
+ To run the file direct from terminal :- npm run dev
+ 
