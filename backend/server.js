@@ -15,29 +15,22 @@ const translateRoutes = require("./routes/translateRoutes");
 const { uploadRoot } = require("./middlewares/upload");
 
 const app = express();
-
-// Middleware
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // allow requests with no origin (like mobile apps, curl)
-      if (!origin) return callback(null, true);
-      if (
-        origin.endsWith(".vercel.app") ||
-        origin.includes("localhost") ||
-        origin.includes("127.0.0.1")
-      ) {
-        return callback(null, true);
-      }
-      return callback(null, true);
-    },
+    origin: [
+      "https://sherise-nine.vercel.app",
+      "http://localhost:5173",
+      "http://localhost:3000"
+    ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
+app.options(/.*/, cors());
 app.use(express.json());
 app.use("/uploads", express.static(uploadRoot));
 
-// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/consultations", consultationRoutes);
@@ -45,20 +38,18 @@ app.use("/api/therapy", therapyRoutes);
 app.use("/api/helplines", helplineRoutes);
 app.use("/api/emergency", emergencyRoutes);
 app.use("/api/translate", translateRoutes);
-
-// Test Route
 app.get("/", (req, res) => {
   res.send("SheRise API is running");
 });
-
-// MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB Connected");
 
     app.listen(process.env.PORT || 5000, () => {
-      console.log(`Server running on port ${process.env.PORT || 5000}`);
+      console.log(
+        `Server running on port ${process.env.PORT || 5000}`
+      );
     });
   })
   .catch((err) => {
