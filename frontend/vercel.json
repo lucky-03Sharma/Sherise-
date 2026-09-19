@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://sherise-backend.onrender.com/api/:path*"
+      "destination": "https://sherise-k6lg.onrender.com/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://sherise-backend.onrender.com/uploads/:path*"
+      "destination": "https://sherise-k6lg.onrender.com/uploads/:path*"
     },
     {
       "source": "/(.*)",

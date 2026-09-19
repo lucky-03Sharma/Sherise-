@@ -6,7 +6,7 @@ const getBaseURL = () => {
     return import.meta.env.VITE_API_URL;
   }
   if (import.meta.env.PROD) {
-    return "https://sherise-backend.onrender.com/api";
+    return "https://sherise-k6lg.onrender.com/api";
   }
   return "/api";
 };
